@@ -1,0 +1,14 @@
+:host{
+  display: flex;
+  height: 100%;
+  flex-flow: column;
+}
+
+.navbar{
+  flex: 0 0 fit-content;
+}
+
+.page-container{
+  width: 100%;
+  flex: 1 1 auto;
+}

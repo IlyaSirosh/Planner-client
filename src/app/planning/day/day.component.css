@@ -1,0 +1,80 @@
+:host{
+  display: flex;
+  height: 100%;
+  max-height: 100%;
+  position: relative;
+}
+
+.widgets{
+  flex: 0 0 25%;
+  max-width: 350px;
+  min-width: 200px;
+}
+
+.day-plan{
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+}
+
+
+
+.day-title{
+  flex: 0 0 fit-content;
+  width: fit-content;
+}
+
+.day-planning{
+  display: flex;
+  flex: 1 1 auto;
+  max-height: 100%;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.tasks{
+  height: 100%;
+  max-height: 100%;
+}
+
+.time-range{
+  width: 150px;
+}
+
+.day-title{
+  font-size: xx-large;
+  padding: 0 10px 10px 10px;
+  border-bottom: 2px black solid;
+  align-self: auto;
+}
+
+.svg-container{
+  height: 100%;
+  max-height: 800px;
+  width: 150px;
+}
+
+#circles{
+  display: none;
+}
+
+#circles  circle{
+  cursor: move;
+}
+
+#task-rect:hover #circles{
+  display: block;
+}
+#task-rect:hover #duration{
+  display: none;
+}
+
+.svg-container{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left:0;
+  top:0;
+  z-index: 999;
+}

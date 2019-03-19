@@ -1,0 +1,19 @@
+<div class="widgets">
+  <div class="month-calendar">
+    calendar
+  </div>
+  <div class="upcoming-deadlines">
+    deadlines
+  </div>
+</div>
+<div class="day-plan">
+  <div class="day-title">
+    Tuesday, 14
+  </div>
+  <div class="day-planning" #taskContainer tasksConnector>
+    <day-time-range class="time-range" [tasks]="tasks"></day-time-range>
+    <div class="tasks">
+      <day-task *ngFor="let t of tasks" [task]="t"></day-task>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+:host{
+  display: block;
+  padding: 10px;
+  /*border: thin solid #ccc;*/
+  background-color: rgba(242, 241, 239, 1);
+}
+
+.task-header{
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.task-title{
+  margin-right: 10px;
+  font-size: large;
+}
+
+.task-labels{
+
+}
+
+.task-notes{
+  font-size: small;
+}

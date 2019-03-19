@@ -1,0 +1,17 @@
+:host{
+  display: flex;
+  flex-flow: row;
+  height: 100%;
+}
+
+.planning-page-container{
+  flex: 2 2 auto;
+  height: 100%;
+}
+
+.task-list-container{
+  flex: 1 1 25%;
+  height: 100%;
+  max-width: 350px;
+  min-width: 200px;
+}

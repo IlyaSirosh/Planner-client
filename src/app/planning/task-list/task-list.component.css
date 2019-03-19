@@ -1,0 +1,50 @@
+:host{
+  display: block;
+  border: thin solid lightgray;
+  margin: 0 10px;
+  box-shadow: 0px 0px 20px #ccc;
+  background-color: white;
+}
+
+.task-header{
+  padding: 10px 20px;
+  text-align: center;
+  background-color: rgba(204,204,204, 0.5);
+  font-size: large;
+}
+
+.task-container{
+  padding: 10px;
+}
+
+.task{
+  margin: 10px;
+}
+
+.add-task-button-container{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 0 10px 10px 10px;
+}
+
+.add-task-button{
+  min-width: 120px;
+  max-width: 170px;
+  padding: 3px;
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  background-color: rgba(242, 241, 239, 0.5);
+  /*color: #cccc;*/
+  border-radius: 20px;
+  cursor: pointer;
+  border: thin transparent solid;
+}
+
+.add-task-button:hover{
+  box-shadow: 0px 0px 10px #ccc;
+  background-color: whitesmoke;
+  border: thin #ccc solid;
+  /*color: gray;*/
+}

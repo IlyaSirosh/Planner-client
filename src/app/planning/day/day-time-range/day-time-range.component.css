@@ -1,0 +1,32 @@
+:host{
+  max-height: 800px;
+  min-height: 600px;
+  margin-bottom: 20px;
+}
+
+.svg-container{
+  height: 100%;
+  width: 100%;
+}
+
+#circles{
+  display: none;
+}
+
+#circles  circle{
+  cursor: move;
+}
+
+#task-rect:hover #circles{
+  display: block;
+}
+#task-rect:hover #duration{
+  display: none;
+}
+
+#task-rect:hover #circles{
+  display: block;
+}
+#task-rect:hover #duration{
+  display: none;
+}
