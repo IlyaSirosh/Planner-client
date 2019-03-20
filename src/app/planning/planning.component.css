@@ -1,11 +1,11 @@
 :host{
   display: flex;
-  flex-flow: row;
+  flex-flow: row wrap;
   height: 100%;
 }
 
 .planning-page-container{
-  flex: 2 2 auto;
+  flex: 2 0 auto;
   height: 100%;
 }
 
@@ -13,5 +13,5 @@
   flex: 1 1 25%;
   height: 100%;
   max-width: 350px;
-  min-width: 200px;
+  min-width: 170px;
 }

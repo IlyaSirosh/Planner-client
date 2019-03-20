@@ -1,0 +1,60 @@
+:host{
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  height: 100%;
+  width: 100%;
+}
+
+.day-plan{
+  display: flex;
+  max-height: 100%;
+  flex: 1 1 100%;
+  position: relative;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.time-line{
+  flex: 0 1 30%;
+  min-width: 130px;
+  max-width: 180px;
+  z-index: 5;
+}
+
+.tasks{
+  flex: 1 0 70%;
+  z-index: 5;
+  max-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  position: relative;
+  /*min-width: 600px;*/
+  right: -17px;
+}
+
+.tasks-nested-container{
+  position: absolute;
+  top:0;
+  bottom: 0;
+  right: 70px;
+  left: 20px;
+}
+
+.tasks-nested{
+  padding-bottom: 30px;
+}
+
+.day-title{
+  flex: 0 0 fit-content;
+  width: fit-content;
+  font-size: xx-large;
+  padding: 0 10px 10px 10px;
+  border-bottom: 2px black solid;
+  align-self: auto;
+}
+
+

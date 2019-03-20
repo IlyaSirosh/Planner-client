@@ -7,13 +7,6 @@
   </div>
 </div>
 <div class="day-plan">
-  <div class="day-title">
-    Tuesday, 14
-  </div>
-  <div class="day-planning" #taskContainer tasksConnector>
-    <day-time-range class="time-range" [tasks]="tasks"></day-time-range>
-    <div class="tasks">
-      <day-task *ngFor="let t of tasks" [task]="t"></day-task>
-    </div>
-  </div>
+  <app-day-plan [tasks]="tasks" ></app-day-plan>
 </div>
+

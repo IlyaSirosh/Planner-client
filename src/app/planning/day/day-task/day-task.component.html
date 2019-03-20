@@ -1,7 +1,7 @@
 <div class="task-container">
   <div class="task-time">
     <div class="task-begin">
-      {{task.begin | date:'h:mm'}}
+      {{task.begin | date:'H:mm'}}
     </div>
 
     <svg width="20" height="35"
@@ -11,7 +11,7 @@
       <line x1="10" y1="0" x2="10" y2="35" style="stroke:#ccc;stroke-width:0.5"></line>
     </svg>
     <div class="task-end" *ngIf="task.end">
-      {{task.end | date:'h:mm'}}
+      {{task.end | date:'H:mm'}}
     </div>
 
   </div>

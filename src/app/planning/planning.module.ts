@@ -11,6 +11,7 @@ import { DayTaskComponent } from './day/day-task/day-task.component';
 import { DayTimeRangeComponent } from './day/day-time-range/day-time-range.component';
 import { TasksConnectorDirective } from './day/tasks-connector.directive';
 import { DayPlanComponent } from './day/day-plan/day-plan.component';
+import { TaskScrollableDirective } from './day/task-scrollable.directive';
 
 
 
@@ -24,7 +25,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [PlanningComponent, DayComponent, MonthComponent, TaskListComponent, TaskComponent, DayTaskComponent, DayTimeRangeComponent, TasksConnectorDirective, DayPlanComponent],
+  declarations: [PlanningComponent, DayComponent, MonthComponent, TaskListComponent, TaskComponent, DayTaskComponent, DayTimeRangeComponent, TasksConnectorDirective, DayPlanComponent, TaskScrollableDirective],
   imports: [
     CommonModule,
     SharedModule,

@@ -3,11 +3,13 @@
     Tuesday, 14
   </div>
 </div>
-<div class="day-plan">
-  <div class="time-line">
-
-  </div>
-  <div>
-    <day-task *ngFor="let t of tasks" [task]="t"></day-task>
+<div class="day-plan" tasksConnector [scrollable]="scroll">
+  <day-time-range class="time-line" [tasks]="tasks"></day-time-range>
+  <div class="tasks" #scroll>
+    <div class="tasks-nested-container">
+      <div class="tasks-nested">
+        <day-task *ngFor="let t of tasks" [task]="t"></day-task>
+      </div>
+    </div>
   </div>
 </div>

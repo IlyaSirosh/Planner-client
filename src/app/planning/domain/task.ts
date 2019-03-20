@@ -21,15 +21,15 @@ export class Task {
     new Task('Title 5',
       new Date(2019, 1, 25, 16, 0),
       new Date(2019, 1, 25, 18, 15), 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis, cupiditate dignissimos dolore doloremque error '),
-    // new Task('Title 6',
-    //   new Date(2019, 1, 25, 18, 20),
-    //   null, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis, cupiditate dignissimos dolore doloremque error '),
-    // new Task('Title 7',
-    //   new Date(2019, 1, 25, 19, 0),
-    //   new Date(2019, 1, 25, 20, 15), null),
-    // new Task('Title 8',
-    //   new Date(2019, 1, 25, 20, 15),
-    //   null, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis, cupiditate dignissimos dolore doloremque error ')
+    new Task('Title 6',
+      new Date(2019, 1, 25, 18, 20),
+      null, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis, cupiditate dignissimos dolore doloremque error '),
+    new Task('Title 7',
+      new Date(2019, 1, 25, 19, 0),
+      new Date(2019, 1, 25, 20, 15), null),
+    new Task('Title 8',
+      new Date(2019, 1, 25, 20, 15),
+      null, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis, cupiditate dignissimos dolore doloremque error ')
   ];
 
 }
