@@ -17,8 +17,8 @@
 
 .time-line{
   flex: 0 1 30%;
-  min-width: 130px;
-  max-width: 180px;
+  min-width: 100px;
+  max-width: 150px;
   z-index: 5;
 }
 

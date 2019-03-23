@@ -35,7 +35,7 @@ export class DayTimeRangeComponent implements OnInit, AfterViewInit{
     this.numberOfHours = 18;
     this.startsFrom = 6;
     this.width = this.elem.nativeElement.offsetWidth;
-    this.offsetToTimeline = this.width / 2;
+    this.offsetToTimeline = this.width * 0.667;
     this.strokeWidth = 0.1;
     this.taskHalfWidth = 25;
 
