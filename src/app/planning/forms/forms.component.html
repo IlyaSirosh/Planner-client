@@ -1,0 +1,48 @@
+
+<div class="form-container-outer" #container>
+  <div class="form-container" [hidden]="!showForm" #formRef>
+    <div class="form-nested-container">
+      <ng-container *ngTemplateOutlet="template">
+      </ng-container>
+      <button class="close-form-button close" aria-label="Close" (click)="closeForm()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+
+<ng-template #taskFormTemplate>
+  <div class="form-nested-container">
+    <input class="task-name" placeholder="Task name"/>
+    <textarea class="task-notes" placeholder="Notes"></textarea>
+    <button class="task-options-button" (click)="toggleTaskOptions()">{{taskOptionsLabel}}</button>
+    <div class="task-options" *ngIf="showTaskOptions" @optionState>
+      <div class="task-project">
+        <div class="selected-project">
+
+        </div>
+        <div class="project-selection">
+          <button class="select-button">select</button> or <button class="select-button">create</button> project
+        </div>
+      </div>
+      <div class="task-deadline">
+        deadline
+      </div>
+      <div class="task-repetition">
+        repetition
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #projectFormTemplate>
+  <input class="project-name"/>
+  <div class="project-color">
+    color
+  </div>
+  <div class="project-deadline">
+    deadline
+  </div>
+</ng-template>

@@ -1,0 +1,131 @@
+:host{
+  display: block;
+  position: absolute;
+  top: 0;
+  left:0;
+  right: 0;
+  bottom: 0;
+
+}
+
+button {
+  padding: 0;
+  border: none;
+  font-size: 100%;
+  font-family: inherit;
+  background: none;
+  user-select: none;
+}
+
+button:focus{
+  outline: none;
+}
+
+.form-container-outer{
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.form-nested-container{
+  position: relative;
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+}
+
+.form-container{
+  z-index: 10!important;
+  box-shadow: 0 0 10px #cccc;
+  padding: 10px;
+  border-radius: 5px;
+  max-width: 320px;
+  min-width: 220px;
+  position: absolute;
+  background-color: rgba(204,204,204, 0.85);
+  width: fit-content;
+}
+
+.task-name{
+
+  border: none;
+  background-color: transparent;
+  font-size: 100%;
+  text-align: center;
+  border-bottom: thin solid gray;
+  width: 80%;
+}
+
+.task-name:focus{
+  outline: none;
+  border-color:black;
+}
+
+.task-notes{
+  padding: 7px;
+  min-height: 60px;
+  max-height: 150px;
+  min-width: 200px;
+  max-width: 300px;
+  margin-top: 10px;
+  border-radius: 5px;
+  background-color: transparent;
+  border-color: gray;
+}
+
+.task-notes:focus{
+  outline: none;
+  border-color: black;
+}
+
+.task-options-button{
+  align-self: flex-end;
+  margin-top: 5px;
+  color: gray;
+  font-size: small;
+  text-decoration: none;
+}
+
+.task-options-button:hover{
+  text-decoration: underline;
+}
+
+.task-options-button:focus{
+  text-decoration: underline;
+  text-decoration-color: black;
+}
+
+
+.close-form-button{
+  color: gray;
+  position: absolute;
+  font-size: x-large;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  top: -15px;
+  right: -15px;
+  text-justify: auto;
+  text-align: center;
+  transition: transform 200ms ease-out;
+}
+
+.close-form-button:focus{
+  border: thin gray solid;
+}
+
+.close-form-button:hover{
+  color: black;
+}
+
+.close-form-button:active{
+  transform: scale(0.9);
+}
+
+.task-options{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}

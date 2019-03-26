@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Task} from '../domain/task';
+import {FormsService} from '../forms/forms.service';
 
 
 @Component({
@@ -14,7 +15,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
 
   activeTabRef: TemplateRef;
   ctx;
-  constructor() { }
+  constructor(private formsService: FormsService) { }
 
   ngOnInit() {
     this.selectWaitingTab(this.planingProjectsRef);
@@ -23,8 +24,12 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
   }
 
-  addTask(list): void {
+  openTaskFrom(e, task = null): void {
+    this.formsService.openTaskForm(task, e, null);
+  }
 
+  openProjectForm(e, project = null): void {
+    this.formsService.openProjectForm(project, e, null);
   }
 
   selectWaitingTab(ref: TemplateRef): void {

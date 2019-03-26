@@ -23,7 +23,7 @@
 
 <ng-template #waitingRef let-list="list">
   <div class="add-task-button-container">
-    <button class="add-task-button">
+    <button class="add-task-button" (click)="openTaskFrom($event)">
       <span>new task</span>
     </button>
   </div>
@@ -38,7 +38,7 @@
 
 <ng-template #projectsRef>
   <div class="add-task-button-container">
-    <button class="add-task-button">
+    <button class="add-task-button" (click)="openProjectForm($event)">
       <span>new project</span>
     </button>
   </div>
