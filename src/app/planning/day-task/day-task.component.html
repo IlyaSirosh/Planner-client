@@ -1,0 +1,69 @@
+<div class="task-container">
+  <div class="task-time" *ngIf="isPlaned">
+    <div class="task-begin">
+      {{task.begin | date:'H:mm'}}
+    </div>
+
+    <svg width="20" height="35"
+         xmlns="http://www.w3.org/2000/svg"
+         *ngIf="task.end"
+         class="time-separator">
+      <line x1="10" y1="0" x2="10" y2="35" style="stroke:#ccc;stroke-width:0.5"></line>
+    </svg>
+    <div class="task-end" *ngIf="task.end">
+      {{task.end | date:'H:mm'}}
+    </div>
+
+  </div>
+  <div class="task">
+    <div class="task-header">
+      <div class="task-title">
+        {{task.title}}
+      </div>
+      <div class="task-labels">
+        <div class="deadline task-label" *ngIf="task.deadline">
+          <div class="task-label-icon deadline-icon">
+            <img src="../../../assets/icons/deadline.svg">
+          </div>
+          <div class="task-label-title">
+              {{ task.deadline | date:'d.MM' }}
+          </div>
+        </div>
+        <div class="project task-label" *ngIf="task.project">
+          <div class="task-label-icon project-icon"
+               [style]="task.project.color ? {'background-color': task.project.color} : {'border-color':'#ccc'}">
+          </div>
+          <div class="task-label-title">
+            {{task.project.name}}
+          </div>
+        </div>
+        <!--<div class="repetition task-label">-->
+          <!--<div class="task-label-icon repetition-icon">-->
+            <!--M T W T S S-->
+          <!--</div>-->
+          <!--<div class="task-label-title">-->
+          <!--</div>-->
+        <!--</div>-->
+      </div>
+    </div>
+    <div class="toggle-notes" *ngIf="!showNotes && task.notes">
+      <span (click)="toggleNotes()" [class.active]="showNotesTrigger">^</span>
+    </div>
+    <div class="task-notes" *ngIf="showNotesTrigger && task.notes" [@notesState]="showNotesTrigger && task.notes && showNotes ? 'shown' : 'hidden'">
+      {{task.notes}}
+    </div>
+  </div>
+</div>
+
+
+<div class="action-buttons" *ngIf="showActionButtons && isPlaned" @taskButtonsState>
+  <div class="action-button">
+    waiting
+  </div>
+  <div class="action-button">
+    archive
+  </div>
+  <div class="action-button">
+    move
+  </div>
+</div>

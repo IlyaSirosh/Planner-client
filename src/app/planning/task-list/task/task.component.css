@@ -3,6 +3,7 @@
   padding: 10px;
   /*border: thin solid #ccc;*/
   background-color: rgba(242, 241, 239, 1);
+  overflow: auto;
 }
 
 .task-header{

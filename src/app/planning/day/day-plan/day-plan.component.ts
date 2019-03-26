@@ -1,5 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Task} from '../../domain/task';
+import {PlanningDay} from '../../domain/planning-day';
+
 
 @Component({
   selector: 'app-day-plan',
@@ -8,7 +10,7 @@ import {Task} from '../../domain/task';
 })
 export class DayPlanComponent implements OnInit {
 
-  @Input() tasks: Task[];
+  @Input() day: PlanningDay;
   @Output() updateTasks = new EventEmitter<Task[]>();
   @Output() addTask = new EventEmitter<Task>();
 

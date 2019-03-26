@@ -1,7 +1,9 @@
 import {AfterViewInit, Component, ElementRef, OnInit, QueryList, Renderer2, ViewChild, ViewChildren} from '@angular/core';
 import {Task} from '../domain/task';
 import {DayTimeRangeComponent} from './day-time-range/day-time-range.component';
-import {DayTaskComponent} from './day-task/day-task.component';
+import {DayTaskComponent} from '../day-task/day-task.component';
+import {PlanningDay} from '../domain/planning-day';
+
 
 @Component({
   selector: 'planning-day',
@@ -9,14 +11,17 @@ import {DayTaskComponent} from './day-task/day-task.component';
   styleUrls: ['./day.component.css']
 })
 export class DayComponent implements OnInit, AfterViewInit {
-  date: Date;
-  tasks: Task[];
 
+  day: PlanningDay;
 
   constructor(private renderer: Renderer2, private elem: ElementRef) { }
 
   ngOnInit() {
-    this.tasks = Task.TASKS;
+    this.day = new PlanningDay();
+
+    this.day.tasks = Task.TASKS;
+    this.day.date = new Date(Date.now());
+
 
   }
 

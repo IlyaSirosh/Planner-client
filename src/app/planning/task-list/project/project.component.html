@@ -1,0 +1,31 @@
+<div class="project-header">
+  <div class="project-label">
+    <div class="project-icon">
+    </div>
+    <div class="project-name">
+      Project 2
+    </div>
+  </div>
+  <div class="project-info">
+    <div class="deadline">
+      <div class="deadline-icon">
+        <img src="../../../../assets/icons/deadline.svg"/>
+      </div>
+      <div class="deadline-date">
+        28.03
+      </div>
+    </div>
+    <div class="add-task-button">
+      <button>+</button>
+    </div>
+  </div>
+</div>
+<div class="project-tasks">
+  <div class="tasks-nested-container">
+    <day-task *ngFor="let t of tasks"
+              [task]="t"
+              [isPlaned]="false"
+              [showNotes]="false"
+              class="task-item"></day-task>
+  </div>
+</div>

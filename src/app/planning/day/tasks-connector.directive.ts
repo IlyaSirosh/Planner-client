@@ -3,7 +3,7 @@ import {
   Renderer2
 } from '@angular/core';
 import {DayTimeRangeComponent, TaskNode} from './day-time-range/day-time-range.component';
-import {DayTaskComponent} from './day-task/day-task.component';
+import {DayTaskComponent} from '../day-task/day-task.component';
 import {skipUntil} from 'rxjs/internal/operators';
 import {TaskScrollableDirective} from './task-scrollable.directive';
 

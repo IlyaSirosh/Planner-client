@@ -1,0 +1,101 @@
+:host{
+  display: block;
+  border: thin solid #ccc;
+}
+
+.project-header{
+  display: flex;
+  justify-content: space-between;
+  background-color: rgba(242, 241, 239, 0.5);
+  padding: 10px;
+  border-bottom: thin solid #ccc;
+}
+
+.project-label{
+  display: flex;
+  align-items: center;
+}
+
+.project-icon{
+  width: 0.9em;
+  height: 0.9em;
+  border-radius: 50%;
+  background-color: red;
+  margin-right: 5px;
+}
+
+.project-name{
+
+}
+
+.project-info{
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-end;
+}
+
+.deadline{
+  display: flex;
+  align-items: flex-end;
+}
+
+.deadline-icon{
+  width: 0.9em;
+  height: 1em;
+}
+
+.deadline-date{
+  font-size: small;
+  color: gray;
+}
+
+.add-task-button{
+  margin-left: 15px;
+  font-size: large;
+  display: flex;
+  align-items: center;
+}
+
+.add-task-button button{
+  font-size: 100%;
+  font-family: inherit;
+  background: none;
+  padding: 0;
+  outline: 0;
+  color: gray;
+  border: none;
+  transition: transform 200ms ease-out, color 200ms ease-out;
+}
+
+.add-task-button button:hover{
+  color: black;
+}
+
+.add-task-button button:active{
+  transform: scale(0.9);
+  color: gray;
+}
+
+.project-tasks{
+  border: thin solid rgba(242, 241, 239, 0.5);
+  border-top: none;
+
+  min-height: 200px;
+  max-height: 250px;
+  overflow: hidden;
+  position: relative;
+}
+
+.tasks-nested-container{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: -15px;
+  bottom: 0;
+  padding-top: 10px;
+  overflow-y: scroll;
+}
+
+.task-item{
+  margin: 0 10px 10px 10px;
+}

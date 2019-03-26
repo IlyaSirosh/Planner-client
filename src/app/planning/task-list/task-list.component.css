@@ -1,20 +1,28 @@
 :host{
-  display: block;
   border: thin solid lightgray;
   margin: 0 10px;
-  box-shadow: 0px 0px 20px #ccc;
+  /*box-shadow: 0px 0 15px #ccc;*/
   background-color: white;
+  height: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction:column;
+  position: relative;
 }
 
 .task-header{
-  padding: 10px 20px;
+  padding: 10px;
   text-align: center;
   background-color: rgba(204,204,204, 0.5);
   font-size: large;
+  display: flex;
+  justify-content: space-around;
 }
 
 .task-container{
-  padding: 10px;
+  flex: 1 1;
+  display: flex;
+  flex-direction:column;
 }
 
 .task{
@@ -22,10 +30,13 @@
 }
 
 .add-task-button-container{
-  width: 100%;
   display: flex;
   justify-content: center;
-  margin: 0 10px 10px 10px;
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  height: 50px;
+  z-index: 5;
 }
 
 .add-task-button{
@@ -39,7 +50,19 @@
   /*color: #cccc;*/
   border-radius: 20px;
   cursor: pointer;
-  border: thin transparent solid;
+  border: thin lightgray solid;
+  font-size: 100%;
+  font-family: inherit;
+  transition: transform 200ms ease-out;
+  color: gray;
+}
+
+.add-task-button:focus{
+  outline: none;
+  border: thin   gray solid;
+}
+.add-task-button:active{
+  transform: scale(0.95);
 }
 
 .add-task-button:hover{
@@ -47,4 +70,58 @@
   background-color: whitesmoke;
   border: thin #ccc solid;
   /*color: gray;*/
+}
+
+.list-title{
+  color: #cccccc;
+  font-size: 100%;
+  font-family: inherit;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: transform 200ms ease-out, color 200ms ease-out;
+}
+
+
+.list-title:hover{
+  color: black;
+}
+
+.list-title:focus{
+  outline: none;
+  color: black;
+}
+
+.list-title.active{
+  color: gray;
+  cursor: inherit;
+  transform: scale(1.3);
+}
+
+.list-title:active{
+  /*transform: scale(0.9);*/
+}
+
+.list-container{
+  position: relative;
+  flex: 1 1;
+  overflow: hidden;
+}
+
+.list-container-nested{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: -17px;
+  bottom: 0;
+  overflow-y: scroll;
+}
+
+.list-container.add-button-offset > .list-container-nested{
+  padding-top: 50px;
+}
+
+.list-item{
+  margin: 0 15px 15px 15px;
 }

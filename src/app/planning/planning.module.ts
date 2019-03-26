@@ -7,11 +7,13 @@ import {RouterModule, Routes} from '@angular/router';
 import { TaskListComponent } from './task-list/task-list.component';
 import {SharedModule} from '../shared/shared.module';
 import { TaskComponent } from './task-list/task/task.component';
-import { DayTaskComponent } from './day/day-task/day-task.component';
+import { DayTaskComponent } from './day-task/day-task.component';
 import { DayTimeRangeComponent } from './day/day-time-range/day-time-range.component';
 import { TasksConnectorDirective } from './day/tasks-connector.directive';
 import { DayPlanComponent } from './day/day-plan/day-plan.component';
 import { TaskScrollableDirective } from './day/task-scrollable.directive';
+import { RepetitionLabelComponent } from './day-task/repetition-label/repetition-label.component';
+import { ProjectComponent } from './task-list/project/project.component';
 
 
 
@@ -25,7 +27,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [PlanningComponent, DayComponent, MonthComponent, TaskListComponent, TaskComponent, DayTaskComponent, DayTimeRangeComponent, TasksConnectorDirective, DayPlanComponent, TaskScrollableDirective],
+  declarations: [PlanningComponent, DayComponent, MonthComponent, TaskListComponent, TaskComponent, DayTaskComponent, DayTimeRangeComponent, TasksConnectorDirective, DayPlanComponent, TaskScrollableDirective, RepetitionLabelComponent, ProjectComponent],
   imports: [
     CommonModule,
     SharedModule,

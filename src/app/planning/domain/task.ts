@@ -1,9 +1,17 @@
+import {ProjectPreview} from './project';
+
 let i = 0;
 export class Task {
   public id: number;
   constructor(public title: string, public begin: Date, public end: Date, public notes: string) {
     this.id = i++;
   }
+
+  repeat: TaskRepeat;
+  deadline: Date;
+  project: ProjectPreview;
+  isPlaned: boolean;
+  position: number;
 
   static TASKS: Task[] = [
     new Task('Title 1',
@@ -35,4 +43,21 @@ export class Task {
 }
 
 
+export class TaskRepeat {
 
+  days: string[];
+  repetition: Repetition;
+
+}
+
+export enum Repetition {
+  Daily, Weekly, Monthly
+}
+
+export class TaskPreview {
+  id: number;
+  title: string;
+  project: ProjectPreview;
+  deadline: Date;
+  isPlaned: boolean;
+}

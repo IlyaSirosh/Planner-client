@@ -1,0 +1,14 @@
+<div *ngIf="taskRepeat.repetition === REPETITION.Daily">
+  every day
+</div>
+<div *ngIf="taskRepeat.repetition === REPETITION.Weekly">
+
+</div>
+<div *ngIf="taskRepeat.repetition === REPETITION.Monthly">
+  every month
+</div>
+<div>
+  <span *ngFor="let d  of taskRepeat.days">
+    {{d | slice:'0'}}
+  </span>
+</div>

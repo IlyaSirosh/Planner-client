@@ -1,16 +1,8 @@
 :host{
   display: block;
-  min-width: 400px;
-  max-width: 500px;
-  width: 100%;
   border: thin solid lightgray;
   position: relative;
-  margin-top: 20px;
   background-color: rgba(242, 241, 239, 0.5);
-}
-
-:host:hover{
-  box-shadow: 0px 0px 20px #ccc;
 }
 
 .task-container{
@@ -18,6 +10,7 @@
   display: flex;
   align-items: stretch;
   z-index: 2;
+  position: relative;
 }
 
 .task{
@@ -26,6 +19,8 @@
 }
 
 .task-time{
+  flex: 0 0;
+  width: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,7 +32,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 7px;
   width: 100%;
 }
 
@@ -50,6 +44,7 @@
 }
 
 .task-notes{
+  padding-top: 7px;
   font-size: medium;
 }
 
@@ -85,3 +80,63 @@
   background-color: rgba(242, 241, 239, 0.5);
 }
 
+.task-labels{
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.task-label{
+  margin-left: 10px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.task-label-title{
+  flex: 1 1;
+}
+
+.task-label-icon{
+  margin-right: 5px;
+}
+
+.deadline-icon{
+  width: 1em;
+  height: 1em;
+  margin-right: 0;
+  border: thin solid transparent;
+}
+
+.project-icon{
+  width: 0.7em;
+  height: 0.7em;
+  background-color: orange;
+  border-radius:50%;
+  border: thin solid transparent;
+}
+
+.repetition-icon{
+
+}
+
+.toggle-notes{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: #ccc;
+}
+
+.toggle-notes span{
+  transform: rotate(180deg);
+  transition: transform 200ms ease-out;
+  cursor: pointer;
+}
+
+.toggle-notes span.active{
+  transform: rotate(0deg);
+}

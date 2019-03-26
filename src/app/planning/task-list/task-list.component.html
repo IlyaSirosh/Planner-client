@@ -1,24 +1,67 @@
 <div class="task-header">
-  header
+  <button class="list-title"
+          [class.active]="activeTabRef === waitingRef"
+          (click)="selectWaitingTab(waitingRef)">
+    Waiting
+  </button>
+  <button class="list-title"
+          [class.active]="activeTabRef === projectsRef"
+          (click)="selectProjectsTab(projectsRef)">
+    Projects
+  </button>
+  <button class="list-title"
+          [class.active]="activeTabRef === archiveRef"
+          (click)="selectArchiveTab(archiveRef)">
+    Archive
+  </button>
 </div>
 <div class="task-container">
+  <ng-container *ngIf="activeTabRef">
+    <ng-container *ngTemplateOutlet="activeTabRef; context: ctx"></ng-container>
+  </ng-container>
+</div>
+
+<ng-template #waitingRef let-list="list">
   <div class="add-task-button-container">
-    <div class="add-task-button">
-      <span>add new task</span>
+    <button class="add-task-button">
+      <span>new task</span>
+    </button>
+  </div>
+  <div class="list-container add-button-offset">
+    <div class="list-container-nested">
+      <day-task *ngFor="let t of list" [showNotes]="false"
+                [task]="t" [isPlaned]="false"
+                class="list-item"></day-task>
     </div>
   </div>
-  <tasklist-task class="task"></tasklist-task>
-  <tasklist-task class="task"></tasklist-task>
-  <tasklist-task class="task"></tasklist-task>
-</div>
-<!--<mat-tab-group >-->
-  <!--<mat-tab label="Waiting">-->
-    <!--Content 1-->
-  <!--</mat-tab>-->
-  <!--<mat-tab label="Projects">-->
-    <!--Content 2-->
-  <!--</mat-tab>-->
-  <!--<mat-tab label="Archive">-->
-    <!--Content 3-->
-  <!--</mat-tab>-->
-<!--</mat-tab-group>-->
+</ng-template>
+
+<ng-template #projectsRef>
+  <div class="add-task-button-container">
+    <button class="add-task-button">
+      <span>new project</span>
+    </button>
+  </div>
+  <div class="list-container add-button-offset">
+    <div class="list-container-nested">
+      <planning-project class="list-item"></planning-project>
+      <planning-project class="list-item"></planning-project>
+      <planning-project class="list-item"></planning-project>
+      <planning-project class="list-item"></planning-project>
+      <planning-project class="list-item"></planning-project>
+      <planning-project class="list-item"></planning-project>
+      <planning-project class="list-item"></planning-project>
+      <planning-project class="list-item"></planning-project>
+      <planning-project class="list-item"></planning-project>
+      <planning-project class="list-item"></planning-project>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #archiveRef>
+  <div class="list-container">
+    <div class="list-container-nested">
+      archive
+    </div>
+  </div>
+</ng-template>
