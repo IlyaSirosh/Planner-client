@@ -18,7 +18,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   constructor(private formsService: FormsService) { }
 
   ngOnInit() {
-    this.selectWaitingTab(this.planingProjectsRef);
+    this.selectWaitingTab(this.waitingTasksRef);
   }
 
   ngAfterViewInit() {

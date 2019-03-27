@@ -15,6 +15,7 @@ import { TaskScrollableDirective } from './day/task-scrollable.directive';
 import { RepetitionLabelComponent } from './day-task/repetition-label/repetition-label.component';
 import { ProjectComponent } from './task-list/project/project.component';
 import { FormsComponent } from './forms/forms.component';
+import { DeadlinePickerComponent } from './forms/deadline-picker/deadline-picker.component';
 
 
 
@@ -28,7 +29,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [PlanningComponent, DayComponent, MonthComponent, TaskListComponent, TaskComponent, DayTaskComponent, DayTimeRangeComponent, TasksConnectorDirective, DayPlanComponent, TaskScrollableDirective, RepetitionLabelComponent, ProjectComponent, FormsComponent],
+  declarations: [PlanningComponent, DayComponent, MonthComponent, TaskListComponent, TaskComponent, DayTaskComponent, DayTimeRangeComponent, TasksConnectorDirective, DayPlanComponent, TaskScrollableDirective, RepetitionLabelComponent, ProjectComponent, FormsComponent, DeadlinePickerComponent],
   imports: [
     CommonModule,
     SharedModule,

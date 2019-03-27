@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {MatTabsModule} from '@angular/material/tabs';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    MatTabsModule
+    DragDropModule
   ],
   exports: [
     CommonModule,
-    MatTabsModule
+    DragDropModule
   ]
 })
 export class SharedModule { }
