@@ -10,11 +10,11 @@ import {FormsService} from './forms.service';
 })
 export class FormsComponent implements OnInit {
 
-  @ViewChild('taskFormTemplate') taskTemplate: TemplateRef;
-  @ViewChild('projectFormTemplate') projectTemplate: TemplateRef;
+  @ViewChild('taskFormTemplate') taskTemplate: TemplateRef<any>;
+  @ViewChild('projectFormTemplate') projectTemplate: TemplateRef<any>;
   @ViewChild('formRef') formTemplate: ElementRef;
   @ViewChild('container') containerRef: ElementRef;
-  template: TemplateRef;
+  template: TemplateRef<any>;
   templateContext;
 
   showForm: boolean;

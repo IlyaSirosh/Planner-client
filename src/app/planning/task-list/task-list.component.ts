@@ -10,10 +10,10 @@ import {FormsService} from '../forms/forms.service';
 })
 export class TaskListComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('waitingRef') waitingTasksRef: TemplateRef;
-  @ViewChild('projectsRef') planingProjectsRef: TemplateRef;
+  @ViewChild('waitingRef') waitingTasksRef: TemplateRef<any>;
+  @ViewChild('projectsRef') planingProjectsRef: TemplateRef<any>;
 
-  activeTabRef: TemplateRef;
+  activeTabRef: TemplateRef<any>;
   ctx;
   constructor(private formsService: FormsService) { }
 
@@ -32,19 +32,19 @@ export class TaskListComponent implements OnInit, AfterViewInit {
     this.formsService.openProjectForm(project, e, null);
   }
 
-  selectWaitingTab(ref: TemplateRef): void {
+  selectWaitingTab(ref: TemplateRef<any>): void {
     this.activeTabRef = ref;
     const c = Task.TASKS;
     this.ctx = {list: c};
     console.log(this.ctx);
   }
 
-  selectProjectsTab(ref: TemplateRef): void {
+  selectProjectsTab(ref: TemplateRef<any>): void {
     this.activeTabRef = ref;
 
   }
 
-  selectArchiveTab(ref: TemplateRef): void {
+  selectArchiveTab(ref: TemplateRef<any>): void {
     this.activeTabRef = ref;
 
   }

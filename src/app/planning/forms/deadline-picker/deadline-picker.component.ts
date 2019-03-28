@@ -13,4 +13,8 @@ export class DeadlinePickerComponent implements OnInit, ControlValueAccessor {
   ngOnInit() {
   }
 
+  writeValue(obj: any): void {}
+  registerOnChange(fn: any): void {}
+  registerOnTouched(fn: any): void {}
+  setDisabledState(isDisabled: boolean): void {}
 }
