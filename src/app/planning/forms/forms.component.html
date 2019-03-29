@@ -4,8 +4,11 @@
     <div class="form-nested-container">
       <ng-container *ngTemplateOutlet="template">
       </ng-container>
-      <button class="close-form-button close" aria-label="Close" (click)="closeForm()">
-        <span aria-hidden="true">&times;</span>
+      <button class="form-button close-form-button close" aria-label="Close" (click)="closeForm()">
+        <div aria-hidden="true" class="close-icon">&times;</div>
+      </button>
+      <button class="form-button create-form-button create" aria-label="Create" (click)="save()" *ngIf="showSaveButton">
+          <img class="checkmark-icon" aria-hidden="true" src="../../../assets/icons/checkmark.svg"/>
       </button>
     </div>
   </div>
@@ -14,9 +17,11 @@
 
 
 <ng-template #taskFormTemplate>
-  <div class="form-nested-container">
-    <input class="task-name" placeholder="Task name"/>
-    <textarea class="task-notes" placeholder="Task notes"></textarea>
+  <div class="form-nested-container" [formGroup]="taskForm">
+    <input class="task-name"
+           formControlName="title"
+           placeholder="Task name"/>
+    <textarea class="task-notes" formControlName="notes" placeholder="Task notes"></textarea>
     <button class="task-options-button" (click)="toggleTaskOptions()">{{taskOptionsLabel}}</button>
     <div class="task-options" *ngIf="showTaskOptions" @optionState>
       <div class="task-project">
@@ -38,9 +43,11 @@
 </ng-template>
 
 <ng-template #projectFormTemplate>
-  <div class="form-nested-container">
-    <input class="task-name" placeholder="Project name"/>
-    <div class="project-color">
+  <div class="form-nested-container" [formGroup]="projectForm">
+    <input class="task-name"
+           formControlName="name"
+           placeholder="Project name"/>
+    <div class="project-color" >
       color
     </div>
     <div class="project-deadline">
@@ -48,7 +55,9 @@
     </div>
     <button class="task-options-button" (click)="toggleProjectOptions()">{{projectOptionsLabel}}</button>
     <div class="task-options" *ngIf="showProjectOptions" @optionState>
-      <textarea class="task-notes" placeholder="Project notes"></textarea>
+      <textarea class="task-notes"
+                formControlName="notes"
+                placeholder="Project notes"></textarea>
     </div>
   </div>
 </ng-template>

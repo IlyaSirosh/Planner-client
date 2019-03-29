@@ -83,6 +83,9 @@ export class TasksConnectorDirective implements AfterContentInit, OnInit , OnDes
 
   render(): void {
     console.log('render');
+
+    this.renderer.setStyle(this.svg, 'width', this.elem.nativeElement.offsetWidth);
+    this.renderer.setStyle(this.svg, 'height', this.elem.nativeElement.offsetHeight);
     this.removeAllConnections();
     this.nodes.forEach(node => {
       const task = this.tasks.find( item => item.task.id === node.task.id);
@@ -90,7 +93,6 @@ export class TasksConnectorDirective implements AfterContentInit, OnInit , OnDes
         this.connect(node.ref, task.elem, node.color);
       }
     });
-
   }
 
 
@@ -134,7 +136,7 @@ export class TasksConnectorDirective implements AfterContentInit, OnInit , OnDes
     this.renderer.setAttribute(shape, 'd', path);
     this.renderer.setAttribute(shape, 'fill', 'none');
     this.renderer.setAttribute(shape, 'stroke', color);
-    this.renderer.setAttribute(shape, 'stroke-width', '1');
+    this.renderer.setAttribute(shape, 'stroke-width', '1.4');
     this.renderer.appendChild( this.svg, shape);
     this.renderer.setStyle(shape, 'transition', 'd 50ms');
     this.connectors.push(shape);

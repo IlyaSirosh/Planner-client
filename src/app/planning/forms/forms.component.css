@@ -32,11 +32,11 @@ button:focus{
   display: flex;
   flex-flow: column wrap;
   align-items: center;
+  width: 100%;
 }
 
 .form-container{
   z-index: 10!important;
-  box-shadow: 0 0 10px #cccc;
   padding: 10px;
   border-radius: 5px;
   max-width: 320px;
@@ -44,6 +44,7 @@ button:focus{
   position: absolute;
   background-color: rgba(204,204,204, 0.85);
   width: fit-content;
+  box-shadow: 0 0 10px #cccc;
 }
 
 .task-name{
@@ -99,27 +100,34 @@ button:focus{
 .close-form-button{
   color: gray;
   position: absolute;
-  font-size: x-large;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  top: -15px;
-  right: -15px;
+  top: -14px;
+  right: -14px;
+
+}
+
+.form-button{
   text-justify: auto;
   text-align: center;
   transition: transform 200ms ease-out;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: x-large;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.close-form-button:focus{
+.form-button:focus{
   border: thin gray solid;
 }
 
-.close-form-button:hover{
+.form-button:hover{
   color: black;
 }
 
-.close-form-button:active{
+.form-button:active{
   transform: scale(0.9);
 }
 
@@ -128,4 +136,15 @@ button:focus{
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+}
+
+.checkmark-icon{
+  width: 24px;
+  height: 24px;
+}
+
+.create-form-button{
+  position: absolute;
+  top: -14px;
+  left: -14px;
 }

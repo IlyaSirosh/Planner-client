@@ -2,7 +2,8 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 body{
-  margin: 0 8px;
+  margin: 0;
   height: 100vh;
   max-height: 100vh;
+
 }

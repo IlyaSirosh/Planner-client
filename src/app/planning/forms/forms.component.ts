@@ -1,6 +1,9 @@
 import {Component, ElementRef, OnInit, Renderer2, TemplateRef, ViewChild} from '@angular/core';
 import {optionStateTrigger} from './forms.animations';
 import {FormsService} from './forms.service';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {Project} from '../domain/project';
+import {Task} from '../domain/task';
 
 @Component({
   selector: 'app-forms',
@@ -18,15 +21,20 @@ export class FormsComponent implements OnInit {
   templateContext;
 
   showForm: boolean;
+  showSaveButton = true;
 
   showTaskOptions = false;
   taskOptionsLabel = 'more';
   showProjectOptions = false;
   projectOptionsLabel = 'more';
 
-  constructor(private formService: FormsService, private renderer: Renderer2) { }
+  taskForm: FormGroup;
+  projectForm: FormGroup;
+
+  constructor(private formService: FormsService, private renderer: Renderer2, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
+    this.createForms();
 
     this.formService.$openTaskForm.subscribe( target => {
       this.openTaskForm(target.value);
@@ -39,14 +47,22 @@ export class FormsComponent implements OnInit {
       this.setFormPosition(target.event);
       // TODO add callback function usage
     });
+
+    this.openTaskForm(null);
   }
 
-  openTaskForm(task): void {
+  openTaskForm(task: Task): void {
+    if (task) {
+      this.taskForm.setValue(task);
+    }
     this.template = this.taskTemplate;
     this.showForm = true;
   }
 
-  openProjectForm(project): void {
+  openProjectForm(project: Project): void {
+    if (project) {
+      this.projectForm.setValue(project);
+    }
     this.template = this.projectTemplate;
     this.showForm = true;
   }
@@ -67,7 +83,7 @@ export class FormsComponent implements OnInit {
     this.showForm = false;
   }
 
-  setFormPosition(event): void {
+  private setFormPosition(event): void {
 
     const rect = this.formTemplate.nativeElement.getBoundingClientRect();
     const containerRect = this.containerRef.nativeElement.getBoundingClientRect();
@@ -88,5 +104,33 @@ export class FormsComponent implements OnInit {
     this.renderer.setStyle(this.formTemplate.nativeElement, 'left', `${left}px`);
 
   }
+
+
+  private createForms(): void {
+    this.taskForm = this.formBuilder.group({
+      id: null,
+      title: null,
+      notes: null,
+      repeat: null,
+      deadline: null,
+      project: null
+    });
+
+    this.projectForm = this.formBuilder.group({
+      id: null,
+      name: null,
+      deadline: null,
+      color: null
+    });
+  }
+
+  save(): void {
+
+    // TODO save changes (create)
+
+    console.log(this.taskForm.getRawValue());
+  }
+
+
 
 }
