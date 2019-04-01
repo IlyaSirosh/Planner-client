@@ -16,20 +16,21 @@ import { RepetitionLabelComponent } from './day-task/repetition-label/repetition
 import { ProjectComponent } from './task-list/project/project.component';
 import { FormsComponent } from './forms/forms.component';
 import { DeadlinePickerComponent } from './forms/deadline-picker/deadline-picker.component';
+import { MonthViewComponent } from './month/month-view/month-view.component';
 
 
 
 const routes: Routes = [
   { path: '', component: PlanningComponent,
     children: [
-      { path: '', redirectTo: 'day', pathMatch: 'full'},
+      { path: '', redirectTo: 'month', pathMatch: 'full'},
       { path: 'day', component: DayComponent },
       { path: 'month', component: MonthComponent }
     ]}
 ];
 
 @NgModule({
-  declarations: [PlanningComponent, DayComponent, MonthComponent, TaskListComponent, TaskComponent, DayTaskComponent, DayTimeRangeComponent, TasksConnectorDirective, DayPlanComponent, TaskScrollableDirective, RepetitionLabelComponent, ProjectComponent, FormsComponent, DeadlinePickerComponent],
+  declarations: [PlanningComponent, DayComponent, MonthComponent, TaskListComponent, TaskComponent, DayTaskComponent, DayTimeRangeComponent, TasksConnectorDirective, DayPlanComponent, TaskScrollableDirective, RepetitionLabelComponent, ProjectComponent, FormsComponent, DeadlinePickerComponent, MonthViewComponent],
   imports: [
     CommonModule,
     SharedModule,

@@ -7,3 +7,16 @@ body{
   max-height: 100vh;
 
 }
+
+button {
+  padding: 0;
+  border: none;
+  font-size: 100%;
+  font-family: inherit;
+  background: none;
+  user-select: none;
+}
+
+button:focus{
+  outline: none;
+}

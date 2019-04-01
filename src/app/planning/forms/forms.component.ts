@@ -48,7 +48,6 @@ export class FormsComponent implements OnInit {
       // TODO add callback function usage
     });
 
-    this.openTaskForm(null);
   }
 
   openTaskForm(task: Task): void {
