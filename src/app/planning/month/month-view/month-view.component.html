@@ -20,7 +20,7 @@
   </div>
 </div>
 <div class="month-days">
-  <div class="month-day"  [class.weekend]="d.date.getDay() === 0 || d.date.getDay() === 6"
+  <button class="month-day"  [class.weekend]="d.date.getDay() === 0 || d.date.getDay() === 6"
        *ngFor="let d of month.days">
     <div class="day-number" [class.currentMonth]="d.date.getMonth() === month.date.getMonth()">
      <span *ngIf="d.date.getDate() === 1">
@@ -51,5 +51,5 @@
         <div class="day-deadline" *ngFor="let dl of d.deadlines" [ngStyle]="{'background-color': dl.project.color}">
         </div>
     </div>
-  </div>
+  </button>
 </div>

@@ -71,12 +71,16 @@
   /*height: 16.666666667%;*/
   background-color: white;
   position: relative;
-  transition: transform 200ms ease-out;
+  transition: transform 200ms ease-out, border-color 100ms ease-out;
+  border-top: thin transparent solid;
+  border-left: thin transparent solid;
   border-bottom: thin whitesmoke solid;
   border-right: thin whitesmoke solid;
   box-sizing: border-box;
   padding: 30px 5px 20px 5px;
+
 }
+
 
 
 
@@ -108,6 +112,10 @@
   border-left: thin whitesmoke solid;
 }
 
+.month-day:focus{
+  border-color: gray;
+}
+
 
 .month-day:hover{
   background-color: whitesmoke;
@@ -133,7 +141,7 @@
 .current{
   padding: 2px 7px;
   border-radius:  50%;
-  background-color: rgba(101, 167, 251, 0.86);
+  background-color: rgba(227, 227, 227, 0.86);
 }
 
 .day-task{
