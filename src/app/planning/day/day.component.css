@@ -9,6 +9,11 @@
   flex: 1 1 25%;
   max-width: 350px;
   min-width: 200px;
+  padding: 20px;
+}
+
+.month-calendar{
+
 }
 
 .day-plan{

@@ -1,6 +1,6 @@
 <div class="month-header">
   <div class="month-header-nested-container">
-    <button class="next-month-button" (click)="prevMonth()">
+    <button class="next-month-button" (click)="onPrevMonth()">
       <
     </button>
     <div class="month-label">
@@ -9,7 +9,7 @@
         {{month.date.getFullYear()}}
       </div>
     </div>
-    <button class="next-month-button" (click)="nextMonth()">
+    <button class="next-month-button" (click)="onNextMonth()">
       >
     </button>
   </div>
@@ -21,7 +21,7 @@
 </div>
 <div class="month-days">
   <button class="month-day"  [class.weekend]="d.date.getDay() === 0 || d.date.getDay() === 6"
-       *ngFor="let d of month.days">
+       *ngFor="let d of month.days" (click)="onDaySelected(d)">
     <div class="day-number" [class.currentMonth]="d.date.getMonth() === month.date.getMonth()">
      <span *ngIf="d.date.getDate() === 1">
        {{d.date | date:'MMMM'}}

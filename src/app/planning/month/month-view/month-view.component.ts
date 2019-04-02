@@ -11,8 +11,9 @@ export class MonthViewComponent implements OnInit {
   constructor(private elem: ElementRef){}
 
   @Input() month: PlanningMonth;
-  @Output() next = new EventEmitter();
-  @Output() prev = new EventEmitter();
+  @Output() nextMonth = new EventEmitter();
+  @Output() prevMonth = new EventEmitter();
+  @Output() selectedDay = new EventEmitter();
 
   height: number;
   width: number;
@@ -33,12 +34,16 @@ export class MonthViewComponent implements OnInit {
     this.dayWidth = this.width / 7;
   }
 
-  nextMonth(): void {
-    this.next.emit(this.month);
+  onNextMonth(): void {
+    this.nextMonth.emit(this.month);
   }
 
 
-  prevMonth(): void {
-    this.prev.emit(this.month);
+  onPrevMonth(): void {
+    this.prevMonth.emit(this.month);
+  }
+
+  onDaySelected(day): void {
+    this.selectedDay.emit(day);
   }
 }
