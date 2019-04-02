@@ -74,8 +74,8 @@
   transition: transform 200ms ease-out, border-color 100ms ease-out;
   border-top: thin transparent solid;
   border-left: thin transparent solid;
-  border-bottom: thin whitesmoke solid;
-  border-right: thin whitesmoke solid;
+  border-bottom: thin #ededed solid;
+  border-right: thin #ededed solid;
   box-sizing: border-box;
   padding: 30px 5px 20px 5px;
 
@@ -89,14 +89,14 @@
 }
 
 .month-day.weekend{
-  background-color: #F9F9F9;
+  background-color: #f9f9f9;
 }
 
 .day-number{
   position: absolute;
   top: 7px;
   right: 7px;
-  color: rgb(176,176,176);
+  color: rgb(182, 182, 182);
 }
 
 
@@ -105,22 +105,23 @@
 }
 
 .month-day:nth-child(-n+7){
-  border-top: thin whitesmoke solid;
+  border-top: thin #ededed solid;
 }
 
 .month-day:nth-last-of-type(7n){
-  border-left: thin whitesmoke solid;
-}
-
-.month-day:focus{
-  border-color: gray;
+  border-left: thin #ededed solid;
 }
 
 
 .month-day:hover{
-  background-color: whitesmoke;
+  background-image: linear-gradient(to right, #f3f3f3, #ededed);
   /*transform: scale(1.01);*/
 }
+
+.month-day:focus{
+  border: thin #9a9a9a solid;
+}
+
 
 .week-day-labels{
   display: flex;
