@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, Renderer2, TemplateRef, ViewChild} from '@angular/core';
 import {optionStateTrigger} from './forms.animations';
 import {FormsService} from './forms.service';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {Project} from '../domain/project';
 import {Task} from '../domain/task';
 
@@ -31,6 +31,8 @@ export class FormsComponent implements OnInit {
   taskForm: FormGroup;
   projectForm: FormGroup;
 
+  callbackFn;
+
   constructor(private formService: FormsService, private renderer: Renderer2, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
@@ -39,13 +41,13 @@ export class FormsComponent implements OnInit {
     this.formService.$openTaskForm.subscribe( target => {
       this.openTaskForm(target.value);
       this.setFormPosition(target.event);
-      // TODO add callback function usage
+      this.callbackFn = target.callback;
     });
 
     this.formService.$openProjectForm.subscribe( target => {
       this.openProjectForm(target.value);
       this.setFormPosition(target.event);
-      // TODO add callback function usage
+      this.callbackFn = target.callback;
     });
 
   }
@@ -124,10 +126,13 @@ export class FormsComponent implements OnInit {
   }
 
   save(): void {
+    console.log(this.taskForm.value);
 
-    // TODO save changes (create)
+    if (this.callbackFn) {
+      this.callbackFn(this.taskForm.value);
+    }
+    this.showForm = false;
 
-    console.log(this.taskForm.getRawValue());
   }
 
 

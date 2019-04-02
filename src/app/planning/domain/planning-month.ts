@@ -20,9 +20,7 @@ export class PlanningMonth {
     month.days = Array.apply(null, Array(42)).map((_, i) => {
       const day = new PlanningDay();
       day.date = this.nextDay(d);
-      if (i % 5 === 0) {
-        day.tasks = [null, null, null];
-      }
+
       return day;
     });
 
@@ -56,9 +54,7 @@ export class PlanningMonthPreview {
     month.days = Array.apply(null, Array(42)).map((_, i) => {
       const day = new PlanningDayPreview();
       day.date = this.nextDay(d);
-      if (i % 5 === 0) {
-        day.tasks = [null, null, null];
-      }
+
       return day;
     });
 

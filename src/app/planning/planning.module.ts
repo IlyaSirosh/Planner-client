@@ -18,6 +18,7 @@ import { FormsComponent } from './forms/forms.component';
 import { DeadlinePickerComponent } from './forms/deadline-picker/deadline-picker.component';
 import { MonthViewComponent } from './month/month-view/month-view.component';
 import { CalendarComponent } from './day/calendar/calendar.component';
+import { ProjectPickerComponent } from './forms/project-picker/project-picker.component';
 
 
 
@@ -31,7 +32,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [PlanningComponent, DayComponent, MonthComponent, TaskListComponent, TaskComponent, DayTaskComponent, DayTimeRangeComponent, TasksConnectorDirective, DayPlanComponent, TaskScrollableDirective, RepetitionLabelComponent, ProjectComponent, FormsComponent, DeadlinePickerComponent, MonthViewComponent, CalendarComponent],
+  declarations: [PlanningComponent, DayComponent, MonthComponent, TaskListComponent, TaskComponent, DayTaskComponent, DayTimeRangeComponent, TasksConnectorDirective, DayPlanComponent, TaskScrollableDirective, RepetitionLabelComponent, ProjectComponent, FormsComponent, DeadlinePickerComponent, MonthViewComponent, CalendarComponent, ProjectPickerComponent],
   imports: [
     CommonModule,
     SharedModule,

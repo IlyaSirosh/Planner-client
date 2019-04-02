@@ -14,8 +14,6 @@ export class FormsService {
   public readonly $openProjectForm = this._openProjectForm.asObservable();
 
 
-  private callBackFn;
-
 
   constructor() { }
 
@@ -23,12 +21,12 @@ export class FormsService {
 
   openTaskForm(task: Task, ev, fn): void {
     this._openTaskForm.emit({value: task, event: ev, callback: fn});
-    this.callBackFn = fn;
+
   }
 
   openProjectForm(project: Project, ev, fn): void {
     this._openProjectForm.emit({value: project, event: ev, callback: fn});
-    this.callBackFn = fn;
+
   }
 
   clear(): void {

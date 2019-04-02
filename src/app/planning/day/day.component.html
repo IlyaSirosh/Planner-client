@@ -1,8 +1,8 @@
 <div class="widgets">
-  <app-calendar class="month-calendar"></app-calendar>
-  <div class="upcoming-deadlines">
-    deadlines
-  </div>
+  <app-calendar class="month-calendar" (monthView)="goMonthView($event)"></app-calendar>
+  <!--<div class="upcoming-deadlines">-->
+    <!--deadlines-->
+  <!--</div>-->
 </div>
 <div class="day-plan">
   <app-day-plan [day]="day" ></app-day-plan>

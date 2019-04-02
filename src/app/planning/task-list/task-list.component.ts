@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Task} from '../domain/task';
 import {FormsService} from '../forms/forms.service';
+import {PlanningService} from '../planning.service';
 
 
 @Component({
@@ -15,7 +16,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
 
   activeTabRef: TemplateRef<any>;
   ctx;
-  constructor(private formsService: FormsService) { }
+  constructor(private formsService: FormsService, private planningService: PlanningService) { }
 
   ngOnInit() {
     this.selectWaitingTab(this.waitingTasksRef);
@@ -25,7 +26,13 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   }
 
   openTaskFrom(e, task = null): void {
-    this.formsService.openTaskForm(task, e, null);
+    this.formsService.openTaskForm(task, e, (result) => {
+      if (task) {
+        this.planningService.updateTask(result);
+      } else {
+        this.planningService.addTask(result);
+      }
+    });
   }
 
   openProjectForm(e, project = null): void {
@@ -34,9 +41,8 @@ export class TaskListComponent implements OnInit, AfterViewInit {
 
   selectWaitingTab(ref: TemplateRef<any>): void {
     this.activeTabRef = ref;
-    const c = Task.TASKS;
-    this.ctx = {list: c};
-    console.log(this.ctx);
+
+    this.ctx = {list: this.planningService.$waitingList};
   }
 
   selectProjectsTab(ref: TemplateRef<any>): void {

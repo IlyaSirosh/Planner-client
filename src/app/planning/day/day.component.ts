@@ -3,6 +3,7 @@ import {Task} from '../domain/task';
 import {DayTimeRangeComponent} from './day-time-range/day-time-range.component';
 import {DayTaskComponent} from '../day-task/day-task.component';
 import {PlanningDay} from '../domain/planning-day';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -14,7 +15,7 @@ export class DayComponent implements OnInit, AfterViewInit {
 
   day: PlanningDay;
 
-  constructor(private renderer: Renderer2, private elem: ElementRef) { }
+  constructor(private renderer: Renderer2, private elem: ElementRef, private router: Router) { }
 
   ngOnInit() {
     this.day = new PlanningDay();
@@ -29,4 +30,7 @@ export class DayComponent implements OnInit, AfterViewInit {
 
   }
 
+  goMonthView(month): void {
+    this.router.navigate(['/planning/month']);
+  }
 }

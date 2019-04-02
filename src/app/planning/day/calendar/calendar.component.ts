@@ -12,7 +12,10 @@ export class CalendarComponent implements OnInit {
 
   @Input() month: PlanningMonthPreview;
   @Input() currentDay: PlanningDayPreview;
+
+
   @Output() nextMonth = new EventEmitter<Date>();
+  @Output() prevMonth = new EventEmitter<Date>();
   @Output() daySelected = new EventEmitter<Date>();
   @Output() monthView = new EventEmitter<any>();
 
@@ -24,7 +27,7 @@ export class CalendarComponent implements OnInit {
     const rect = this.elem.nativeElement.getBoundingClientRect();
     const width = rect.width;
     const height = width * 0.80;
-    this.renderer.setStyle(this.elem.nativeElement, 'height', `${height}px`);
+    this.renderer.setStyle(this.elem.nativeElement, 'min-height', `${height}px`);
 
     this.month = PlanningMonthPreview.MONTH;
     this.groupDays();
@@ -73,14 +76,11 @@ export class CalendarComponent implements OnInit {
   }
 
   onNextMonth(): void {
-    // TODO compute next month
-
-    this.nextMonth.emit(null);
+    this.nextMonth.emit(this.month.date);
   }
 
   onPrevMonth(): void {
-    // TODO compute previous month
-    this.nextMonth.emit(null);
+    this.nextMonth.emit(this.month.date);
   }
 
   onDaySelected(day: PlanningDayPreview): void {
