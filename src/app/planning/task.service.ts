@@ -35,7 +35,7 @@ export class TaskService {
 
     const body = this.mapToBackFormat(task);
 
-    return this.http.post(this.URL, body).pipe( map((v) => {
+    return this.http.post(this.URL, body).pipe( map((v: {id: number}) => {
       task.id = v.id;
       return {...task};
     }), tap(data => console.log(data), error => console.error(error)));
@@ -52,7 +52,7 @@ export class TaskService {
 
 
   mapToBackFormat(task: Task): any {
-    const res = {...task};
+    const res = {...task} as any;
 
     if (task.deadline) {
       res.deadline = task.deadline.getMilliseconds();
