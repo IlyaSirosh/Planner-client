@@ -1,0 +1,8 @@
+<div *ngIf="project">
+  {{project.name}}
+</div>
+<div *ngIf="!project">
+  <div *ngFor="let p of projects">
+    {{p.name}}
+  </div>
+</div>

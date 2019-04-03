@@ -1,0 +1,56 @@
+<div class="calendar-header">
+  <div class="calendar-label">
+    <div class="month-label">
+      <button class="next-month-button" (click)="onPrevMonth()">
+        <
+      </button>
+      <button class="month-name" (click)="goMonthView()">
+        {{month.date | date:'MMMM, yyyy'}}
+      </button>
+      <button class="next-month-button" (click)="onNextMonth()">
+        >
+      </button>
+    </div>
+    <button class="today-button" (click)="onTodaySelected()" *ngIf="!(currentDay && isToday(currentDay.date))">
+      today
+    </button>
+  </div>
+  <div class="day-week-labels">
+    <div class="day-week-label" *ngFor="let wd of weekDays">
+      {{wd}}
+    </div>
+  </div>
+</div>
+<div class="calendar-days">
+  <div class="day-column" *ngFor="let dayOfWeek of nodes">
+    <button class="month-day" (click)="onDaySelected(d)"
+            *ngFor="let d of dayOfWeek.daysOfMonth"
+            [class.weekend]="isWeekend(d.date)"
+            [class.anotherMonth]="isNotCurrentMonth(d.date)"
+            [class.selectedDay]="currentDay && currentDay.id === d.id">
+      <div class="day-number" >
+        <span *ngIf="d.date.getDate() === 1">
+          {{d.date | date:'MMM'}}
+        </span>
+          <span [class.currentDay]="isToday(d.date)">
+          {{d.date | date:'d'}}
+        </span>
+      </div>
+
+     <div class="number-of-tasks" *ngIf="d.tasks && d.tasks.length > 0">
+       <div class="number-of-tasks-inner">
+         <span class="task-icon-container">
+            <img class="task-icon" src="../../../../assets/icons/note.svg">
+         </span>
+         <span>{{d.tasks.length}}</span>
+       </div>
+     </div>
+
+      <div class="deadlines">
+        <div class="deadline" *ngFor="let dl of d.deadlines">
+
+        </div>
+      </div>
+    </button>
+  </div>
+</div>

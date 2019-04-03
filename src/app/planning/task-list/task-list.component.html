@@ -30,7 +30,7 @@
   <div class="list-container add-button-offset">
     <div class="list-container-nested">
       <div cdkDropList>
-        <day-task *ngFor="let t of list" [showNotes]="false" cdkDrag
+        <day-task *ngFor="let t of list | async" [showNotes]="false" cdkDrag
                   [task]="t" [isPlaned]="false"
                   class="list-item"></day-task>
       </div>
