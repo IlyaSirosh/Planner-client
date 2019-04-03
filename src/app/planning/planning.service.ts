@@ -44,35 +44,35 @@ export class PlanningService {
 
   }
 
-  getCurrentMonth(): PlanningMonthPreview {
-    const date =  Date.today();
-    return this.mapMonth(date);
-  }
-
-  getNextMonth(date: Date): PlanningMonthPreview {
-    return this.mapMonth(date.next().month());
-  }
-
-  getPrevMonth(date: Date): PlanningMonthPreview{
-    return this.mapMonth(date.prev().month());
-  }
-
-  private mapMonth(date: Date): PlanningMonthPreview {
-
-    const month = new PlanningMonthPreview();
-    month.date = date;
-
-    return null;
-  }
-
-
-  private findMonth(date: Date): {from: number, to: number} {
-    const begin = date.first().day();
-    const end = date.last().day();
-
-    begin.addDays(-1 * (Math.abs(begin.getDay() + 6) % 7) );
-    end.addDays( ( 7 - end.getDay() ) % 7);
-
-    return {from: begin.getMilliseconds(), to: end.getMilliseconds()};
-  }
+  // getCurrentMonth(): PlanningMonthPreview {
+  //   const date =  Date.today();
+  //   return this.mapMonth(date);
+  // }
+  //
+  // getNextMonth(date: Date): PlanningMonthPreview {
+  //   return this.mapMonth(date.next().month());
+  // }
+  //
+  // getPrevMonth(date: Date): PlanningMonthPreview {
+  //   return this.mapMonth(date.prev().month());
+  // }
+  //
+  // private mapMonth(date: Date): PlanningMonthPreview {
+  //
+  //   const month = new PlanningMonthPreview();
+  //   month.date = date;
+  //
+  //   return null;
+  // }
+  //
+  //
+  // private findMonth(date: Date): {from: number, to: number} {
+  //   const begin = date.first().day();
+  //   const end = date.last().day();
+  //
+  //   begin.addDays(-1 * (Math.abs(begin.getDay() + 6) % 7) );
+  //   end.addDays( ( 7 - end.getDay() ) % 7);
+  //
+  //   return {from: begin.getMilliseconds(), to: end.getMilliseconds()};
+  // }
 }
