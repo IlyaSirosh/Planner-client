@@ -18,19 +18,19 @@
 
 <ng-template #taskFormTemplate>
   <div class="form-nested-container" [formGroup]="taskForm">
-    <input class="task-name"
+    <input class="task-name" [class.inputError]="taskName.invalid && (taskName.dirty || taskName.touched) && taskName.errors.required"
            formControlName="title"
            placeholder="Task name"/>
     <textarea class="task-notes" formControlName="notes" placeholder="Task notes"></textarea>
     <button class="task-options-button" (click)="toggleTaskOptions()">{{taskOptionsLabel}}</button>
     <div class="task-options" *ngIf="showTaskOptions" @optionState>
       <div class="task-project">
-        <div class="selected-project">
-
+        <div class="project-selection" *ngIf="!addProjectToTask">
+          <button class="select-button" (click)="selectProject()">select project</button>
         </div>
-        <div class="project-selection">
-          <button class="select-button">select</button> or <button class="select-button">create</button> project
-        </div>
+        <ng-container *ngIf="addProjectToTask">
+          <app-project-picker *ngIf="showProjectSelectionForm" formControlName="project" (close)="removeTaskProject()"></app-project-picker>
+        </ng-container>
       </div>
       <div class="task-deadline">
         <app-deadline-picker formControlName="deadline"></app-deadline-picker>
@@ -45,13 +45,15 @@
 <ng-template #projectFormTemplate>
   <div class="form-nested-container" [formGroup]="projectForm">
     <input class="task-name"
-           formControlName="name"
+           formControlName="name" [class.inputError]="projectName.invalid && (projectName.dirty || projectName.touched) && projectName.errors.required"
            placeholder="Project name"/>
-    <div class="project-color" >
-      color
-    </div>
-    <div class="project-deadline">
-
+    <div class="project-details">
+      <div class="project-color" >
+        <app-color-picker formControlName="color"></app-color-picker>
+      </div>
+      <div class="project-deadline">
+        <app-deadline-picker formControlName="deadline"></app-deadline-picker>
+      </div>
     </div>
     <button class="task-options-button" (click)="toggleProjectOptions()">{{projectOptionsLabel}}</button>
     <div class="task-options" *ngIf="showProjectOptions" @optionState>

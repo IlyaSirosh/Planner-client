@@ -25,7 +25,6 @@ export class MonthViewComponent implements OnInit {
   today = new Date(Date.now());
 
   ngOnInit() {
-    console.log(this.month);
     const rect = this.elem.nativeElement.getBoundingClientRect();
     this.height = rect.height;
     this.width = rect.width;

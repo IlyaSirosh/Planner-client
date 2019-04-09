@@ -1,0 +1,7 @@
+<button class="color-preview" [style.background]="color ? color : 'transparent'" (click)="input.click()">
+
+</button>
+<div class="color-label">
+  color
+</div>
+<input [(colorPicker)]="color" class="hidden-input" #input>

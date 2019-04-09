@@ -1,0 +1,87 @@
+
+.project-label{
+  display: flex;
+  align-items: center;
+}
+
+.project-color {
+  height: 15px;
+  width: 15px;
+  border: thin solid rgba(248, 248, 248, 0.8);
+  border-radius: 50%;
+  margin-right: 7px;
+}
+
+.project-item{
+  padding: 5px;
+  border-bottom: thin solid #fbfbfb;
+}
+
+.project-item:first-child{
+  border-top: thin solid #fbfbfb;
+}
+
+.project-list{
+  height: 60px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.project-list-nested{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  overflow-y: auto;
+}
+
+.project-item{
+  cursor: pointer;
+}
+
+.project-item > > .project-name{
+  color: gray;
+}
+
+.project-item:hover >.project-name{
+  color: black;
+}
+
+.form-button{
+  text-justify: auto;
+  text-align: center;
+  transition: transform 200ms ease-out;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.close-icon{
+  height: 15px;
+  width: 15px;
+  font-size: 15px;
+}
+
+.form-button:focus{
+  border: thin gray solid;
+}
+
+.form-button:hover{
+  color: black;
+}
+
+.form-button:active{
+  transform: scale(0.9);
+}
+
+.project-preview{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -19,7 +19,8 @@ import { DeadlinePickerComponent } from './forms/deadline-picker/deadline-picker
 import { MonthViewComponent } from './month/month-view/month-view.component';
 import { CalendarComponent } from './day/calendar/calendar.component';
 import { ProjectPickerComponent } from './forms/project-picker/project-picker.component';
-
+import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerComponent } from './forms/color-picker/color-picker.component';
 
 
 const routes: Routes = [
@@ -34,11 +35,12 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [PlanningComponent, DayComponent, MonthComponent, TaskListComponent, TaskComponent, DayTaskComponent, DayTimeRangeComponent, TasksConnectorDirective, DayPlanComponent, TaskScrollableDirective, RepetitionLabelComponent, ProjectComponent, FormsComponent, DeadlinePickerComponent, MonthViewComponent, CalendarComponent, ProjectPickerComponent],
+  declarations: [PlanningComponent, DayComponent, MonthComponent, TaskListComponent, TaskComponent, DayTaskComponent, DayTimeRangeComponent, TasksConnectorDirective, DayPlanComponent, TaskScrollableDirective, RepetitionLabelComponent, ProjectComponent, FormsComponent, DeadlinePickerComponent, MonthViewComponent, CalendarComponent, ProjectPickerComponent, ColorPickerComponent],
   imports: [
     CommonModule,
     SharedModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    ColorPickerModule
   ]
 })
 export class PlanningModule { }

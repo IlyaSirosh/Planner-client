@@ -55,3 +55,13 @@
 .deadline{
   display: flex;
 }
+
+.add-deadline{
+  color: gray;
+  text-decoration: underline;
+  transition: color 200ms ease-out;
+}
+
+.add-deadline:hover{
+  color: black;
+}

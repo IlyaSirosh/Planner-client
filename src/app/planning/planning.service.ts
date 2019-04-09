@@ -7,6 +7,7 @@ import * as Moment from 'moment';
 import { extendMoment } from 'moment-range';
 const moment = extendMoment(Moment);
 import {PlanningDay} from './domain/planning-day';
+import {Project} from './domain/project';
 
 
 
@@ -27,7 +28,17 @@ export class PlanningService {
 
   private _days: PlanningDay[] = [];
 
-  constructor(private taskService: TaskService) { }
+  constructor(private taskService: TaskService) {
+    const arr = [];
+    for(let i = 0; i < 8; i++) {
+      const project = new Project();
+      project.name = 'Project ' + (i + 1);
+      arr.push(project);
+    }
+
+    this._projects.next(arr);
+
+  }
 
 
   addTask(task: Task): void {

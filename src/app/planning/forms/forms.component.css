@@ -97,6 +97,9 @@ button:focus{
   text-decoration-color: black;
 }
 
+.task-options > div{
+  margin-top: 5px;
+}
 
 .close-form-button{
   color: gray;
@@ -148,4 +151,38 @@ button:focus{
   position: absolute;
   top: -14px;
   left: -14px;
+}
+
+.select-button {
+  text-decoration: underline;
+  color: gray;
+  transition: color 200ms ease-out;
+}
+
+.select-button:hover {
+  color: black
+}
+
+.project-selection{
+  color: gray;
+}
+
+.project-color{
+  align-self: flex-start;
+}
+
+.project-deadline{
+  align-self: flex-start;
+}
+
+.project-details{
+  width: 100%;
+}
+
+.project-details > div {
+  margin-top: 5px;
+}
+
+.inputError{
+  border-color: #ff3128;
 }
