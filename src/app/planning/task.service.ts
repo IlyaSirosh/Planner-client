@@ -16,29 +16,23 @@ export class TaskService {
 
   constructor(private http: HttpClient) {
 
-    this.URL = `https://ukma-schedule-back.herokuapp.com/api/task`;
+    this.URL = `https://ukma-schedule-back.herokuapp.com/api`;
   }
 
   getArchive(): Observable<Task[]> {
-    return new Observable<Task[]>((resolver) => resolver.next([]));
+    return this.http.get(`${this.URL}/archiveTasks`);
   }
 
   getWaitingTasks(): Observable<Task[]> {
-    return new Observable<Task[]>((resolver) => resolver.next([]));
+    return this.http.get(`${this.URL}/pendingTasks`);
   }
-
-  getTasksByProject(project: Project): Observable<Task[]> {
-    return new Observable<Task[]>((resolver) => resolver.next([]));
-  }
-
-
 
 
   create(task: Task): Observable<any> {
 
     const body = this.mapToBackFormat(task);
 
-    return this.http.post(this.URL, body).pipe( map((v: {id: number}) => {
+    return this.http.post(`${this.URL}/task`, body).pipe( map((v: {id: number}) => {
       task.id = v.id;
       return {...task};
     }), tap(data => console.log(data), error => console.error(error)));
@@ -47,7 +41,7 @@ export class TaskService {
 
   update(task: Task): Observable<any> {
     const body = this.mapToBackFormat(task);
-    return this.http.patch(this.URL, body).pipe( tap(data => console.log(data), error => console.error(error)));
+    return this.http.patch(`${this.URL}/task`, body).pipe( tap(data => console.log(data), error => console.error(error)));
   }
 
   delete(task: Task): Observable<any> {
@@ -56,7 +50,7 @@ export class TaskService {
 
   getTasks(from: number, to: number): Observable<any> {
     const p = new HttpParams().set('from', `${from}`).append('to', `${to}`);
-    return this.http.get(this.URL, {params: p}).pipe( tap(data => console.log(data), error => console.error(error)));;
+    return this.http.get(`${this.URL}/task`, {params: p}).pipe( tap(data => console.log(data), error => console.error(error)));;
   }
 
 

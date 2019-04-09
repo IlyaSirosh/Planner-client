@@ -5,14 +5,16 @@ export class Task {
   title: string;
   project: Project;
   deadline: Date;
-  isPlaned: boolean;
   begin: Date;
   end: Date;
-  repeat: TaskRepeat;
+  // repeat: TaskRepeat;
   position: number;
+  list: TaskList;
 }
 
-
+export enum TaskList {
+  PLANNED = null, WAITING = 0, ARCHIVE = -1
+}
 
 export class TaskRepeat {
 

@@ -5,5 +5,10 @@ export class Project {
   name: string;
   color: string;
   deadline: Date;
+  tasks: Task[];
+
+  constructor() {
+    this.tasks = [];
+  }
 }
 

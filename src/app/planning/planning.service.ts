@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Task} from './domain/task';
+import {Task, TaskList} from './domain/task';
 import {BehaviorSubject} from 'rxjs';
 import {PlanningMonth} from './domain/planning-month';
 import {TaskService} from './task.service';
@@ -11,11 +11,12 @@ import {Project} from './domain/project';
 import {ProjectService} from './project.service';
 
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class PlanningService {
+
+
 
   private _waiting = new BehaviorSubject<Task[]>([]);
   public readonly $waitingList = this._waiting.asObservable();
@@ -54,25 +55,196 @@ export class PlanningService {
   }
 
 
-  addTask(task: Task): void {
+  addTask(task: Task, list: TaskList = TaskList.WAITING): void {
     this.taskService.create(task).toPromise()
       .then((t) => {
-        this._addTask(t);
+        if (list === TaskList.WAITING) {
+          this._addTaskToWaiting(t);
+        } else {
+          this._addTaskToDay(t);
+        }
       })
       .catch(() => {});
   }
 
-  private _addTask(task: Task): void {
+  private _addTaskToWaiting(task: Task): void {
     const arr = [...this._waiting.value];
     arr.unshift(task);
     this._waiting.next(arr);
+
+    if (task.project) {
+
+      const projects = this._projects.value;
+      const index = projects.findIndex(p => p.id === task.project.id);
+      if (index !== -1) {
+        projects[index].tasks.unshift(task);
+      }
+    }
   }
 
-  updateTask(task: Task): void {
+  private _addTaskToDay(task: Task): void {
+   const index = this._days.findIndex(d => moment(d.date).isSame(moment(task.begin), 'day'));
 
+   if (index !== -1) {
+     this._days[index].tasks.push(task);
+   }
+  }
+
+  private _addTaskToArchive(task: Task): void {
+    const arr = [...this._archive.value];
+    arr.unshift(task);
+    this._archive.next(arr);
+  }
+
+  updateTask(task: Task, list: TaskList = TaskList.WAITING): void {
+    this.taskService.update(task).toPromise()
+      .then(() => {
+
+        if (list === TaskList.WAITING) {
+          this._updateTask(task);
+        } else if (list === TaskList.PLANNED) {
+          this._updateDayTask(task);
+        } else {
+          this._updateArchiveTask(task);
+        }
+
+      })
+      .catch(() => {});
+  }
+
+  moveTask(task: Task, from: TaskList, to: TaskList): void {
+    task.list = to;
+    this.taskService.update(task).toPromise()
+      .then(() => {
+
+        switch (from) {
+          case TaskList.WAITING: {
+            this._removeTaskFromWaiting(task);
+            break;
+          }
+          case TaskList.PLANNED: {
+            this._removeTaskFromDay(task);
+            break;
+          }
+          case TaskList.ARCHIVE: {
+            this._removeTaskFromArchive(task);
+            break;
+          }
+
+        }
+
+        switch (to) {
+          case TaskList.WAITING: {
+            this._addTaskToWaiting(task);
+            break;
+          }
+          case TaskList.PLANNED: {
+            this._addTaskToDay(task)
+            break;
+          }
+          case TaskList.ARCHIVE: {
+            this._addTaskToArchive(task);
+            break;
+          }
+
+        }
+
+      })
+      .catch(() => {});
+
+
+
+  }
+
+  private _removeTaskFromWaiting(task: Task): void {
+    const index = this._waiting.value.findIndex( t => t.id === task.id);
+
+    if (index !== -1) {
+      this._waiting.value.splice(index, 1);
+      this._waiting.next(this._waiting.value);
+    }
+
+    if (task.project) {
+
+      const projects = this._projects.value;
+      const index2 = projects.findIndex(p => p.id === task.project.id);
+      if (index2 !== -1) {
+        const index3 = projects[index].tasks.findIndex(t => t.id === task.id);
+        if (index3 !== -1) {
+          projects[index].tasks.splice(index3, 1);
+        }
+      }
+    }
+  }
+
+  private _removeTaskFromArchive(task: Task): void {
+    const index = this._archive.value.findIndex( t => t.id === task.id);
+
+    if (index !== -1) {
+      this._archive.value.splice(index, 1)
+      this._archive.next(this._archive.value);
+    }
+  }
+
+  private _removeTaskFromDay(task: Task): void {
+    const index = this._days.findIndex(day => moment(task.begin).isSame(moment(day.date), 'day'));
+
+    if (index !== -1) {
+      const index2 = this._days[index].tasks.findIndex(d => d.id === task.id);
+
+      if (index2 !== -1) {
+        this._days[index].tasks.splice(index2, 1);
+      }
+    }
   }
 
   private _updateTask(task: Task): void {
+
+    const index = this._waiting.value.findIndex( t => t.id === task.id);
+
+    if (index !== -1) {
+      // TODO more complex update of task
+      this._waiting.value[index] = task;
+      this._waiting.next(this._waiting.value);
+    }
+
+    if (task.project) {
+
+      const projects = this._projects.value;
+      const index2 = projects.findIndex(p => p.id === task.project.id);
+      if (index2 !== -1) {
+        const index3 = projects[index].tasks.findIndex(t => t.id === task.id);
+        if (index3 !== -1) {
+          projects[index].tasks[index3] = task;
+        }
+      }
+    }
+
+  }
+
+  private _updateDayTask(task: Task): void {
+
+
+    const index = this._days.findIndex(day => moment(task.begin).isSame(moment(day.date), 'day'));
+
+    if (index !== -1) {
+      const index2 = this._days[index].tasks.findIndex(d => d.id === task.id);
+
+      if (index2 !== -1) {
+        this._days[index].tasks[index2] = task;
+      }
+    }
+  }
+
+  private _updateArchiveTask(task: Task): void {
+    const index = this._archive.value.findIndex( t => t.id === task.id);
+
+    if (index !== -1) {
+      // TODO more complex update of task
+      this._archive.value[index] = task;
+      this._archive.next(this._archive.value);
+    }
+
 
   }
 
@@ -99,7 +271,12 @@ export class PlanningService {
   }
 
   private _updateProject(project: Project): void {
-
+    const projects = this._projects.value;
+    const index = projects.findIndex(p => p.id === project.id);
+    if (index !== -1) {
+      project.tasks = projects[index].tasks;
+      projects[index] = project;
+    }
   }
 
   getCurrentMonth(): PlanningMonth {

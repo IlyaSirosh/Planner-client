@@ -131,7 +131,8 @@ export class FormsComponent implements OnInit {
       notes: null,
       repeat: null,
       deadline: null,
-      project: null
+      project: null,
+      list: null
     });
 
 

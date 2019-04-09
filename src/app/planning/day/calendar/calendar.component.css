@@ -132,6 +132,7 @@
   transition: transform 200ms ease-out, border-color 200ms ease-out;
   min-height: 35px;
   min-width: 35px;
+  margin: 0;
 }
 
 .month-day.selectedDay{
