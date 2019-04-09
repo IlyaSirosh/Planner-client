@@ -36,7 +36,13 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   }
 
   openProjectForm(e, project = null): void {
-    this.formsService.openProjectForm(project, e, null);
+    this.formsService.openProjectForm(project, e, (result) => {
+      if (project) {
+        this.planningService.updateProject(result);
+      } else {
+        this.planningService.addProject(result);
+      }
+    });
   }
 
   selectWaitingTab(ref: TemplateRef<any>): void {
@@ -47,12 +53,12 @@ export class TaskListComponent implements OnInit, AfterViewInit {
 
   selectProjectsTab(ref: TemplateRef<any>): void {
     this.activeTabRef = ref;
-
+    this.ctx = {list: this.planningService.$projects};
   }
 
   selectArchiveTab(ref: TemplateRef<any>): void {
     this.activeTabRef = ref;
-
+    this.ctx = {list: this.planningService.$archive};
   }
 
 }

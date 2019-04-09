@@ -59,6 +59,11 @@ export class FormsComponent implements OnInit {
   openTaskForm(task: Task): void {
     if (task) {
       this.taskForm.setValue(task);
+
+      if (task && task.project) {
+        this.addProjectToTask = true;
+        this.showProjectSelectionForm = true;
+      }
     }
     this.template = this.taskTemplate;
     this.showForm = true;

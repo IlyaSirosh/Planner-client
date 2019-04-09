@@ -46,16 +46,9 @@
   </div>
   <div class="list-container add-button-offset">
     <div class="list-container-nested">
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
+      <div>
+        <planning-project *ngFor="let p of list | async" [project]="p" class="list-item"></planning-project>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -63,7 +56,11 @@
 <ng-template #archiveRef>
   <div class="list-container">
     <div class="list-container-nested">
-      archive
+      <div cdkDropList>
+        <day-task *ngFor="let t of list | async" [showNotes]="false" cdkDrag
+                  [task]="t" [isPlaned]="false"
+                  class="list-item"></day-task>
+      </div>
     </div>
   </div>
 </ng-template>

@@ -8,6 +8,7 @@ import { extendMoment } from 'moment-range';
 const moment = extendMoment(Moment);
 import {PlanningDay} from './domain/planning-day';
 import {Project} from './domain/project';
+import {ProjectService} from './project.service';
 
 
 
@@ -16,28 +17,40 @@ import {Project} from './domain/project';
 })
 export class PlanningService {
 
-  private _waiting = new BehaviorSubject([]);
+  private _waiting = new BehaviorSubject<Task[]>([]);
   public readonly $waitingList = this._waiting.asObservable();
 
-  private _projects = new BehaviorSubject([]);
+  private _projects = new BehaviorSubject<Project[]>([]);
   public readonly $projects = this._projects.asObservable();
 
-  private _archive = new BehaviorSubject([]);
+  private _archive = new BehaviorSubject<Task[]>([]);
   public readonly $archive = this._archive.asObservable();
 
 
   private _days: PlanningDay[] = [];
 
-  constructor(private taskService: TaskService) {
-    const arr = [];
-    for(let i = 0; i < 8; i++) {
-      const project = new Project();
-      project.name = 'Project ' + (i + 1);
-      arr.push(project);
-    }
+  constructor(private taskService: TaskService, private projectService: ProjectService) {
 
-    this._projects.next(arr);
+    this.taskService.getWaitingTasks().subscribe( (tasks: Task[]) => {
+      if (tasks) {
+        const a: Task[] = this._waiting.value.push(...tasks) as Task[];
+        this._waiting.next(a);
+      }
+    });
 
+    this.projectService.getProjects().subscribe((projects: Project[]) => {
+      if (projects) {
+        const a: Project[] = this._projects.value.push(...projects) as Project[];
+        this._projects.next(a);
+      }
+    });
+
+    this.taskService.getArchive().subscribe( (tasks: Task[]) => {
+      if (tasks) {
+        const a: Task[] = this._archive.value.push(...tasks) as Task[];
+        this._archive.next(a);
+      }
+    });
   }
 
 
@@ -60,6 +73,32 @@ export class PlanningService {
   }
 
   private _updateTask(task: Task): void {
+
+  }
+
+  addProject(project: Project): void {
+    this.projectService.create(project).toPromise()
+      .then((t) => {
+        this._addProject(t);
+      })
+      .catch(() => {});
+  }
+
+  private _addProject(project: Project): void {
+    const arr = [...this._projects.value];
+    arr.unshift(project);
+    this._projects.next(arr);
+  }
+
+  updateProject(project: Project): void {
+    this.projectService.update(project).toPromise()
+      .then(() => {
+        this._updateProject(project);
+      })
+      .catch(() => {});
+  }
+
+  private _updateProject(project: Project): void {
 
   }
 
@@ -195,7 +234,7 @@ export class PlanningService {
   private askForTasks(from: Date, to: Date): void {
     const momentFrom = moment(from);
     const momentTo = moment(to);
-    this.taskService.getTasks(from.getMilliseconds(), to.getMilliseconds()).subscribe((tasks: Task[]) => {
+    this.taskService.getTasks(from.getTime(), to.getTime()).subscribe((tasks: Task[]) => {
       const days = this._days.filter((day) => moment(day.date).isBetween(momentFrom, momentTo, 'day', '[]'));
       days.forEach((day) => {
         day.tasks = tasks.filter((t) => moment(day.date).isSame(moment(t.begin, 'day')));
@@ -206,8 +245,8 @@ export class PlanningService {
 
   private sortDays(list: PlanningDay[]): void {
     list.sort((a, b) => {
-      const aMil: number = a.date.getMilliseconds();
-      const bMil: number  = b.date.getMilliseconds();
+      const aMil: number = a.date.getTime();
+      const bMil: number  = b.date.getTime();
       return Math.sign(aMil - bMil);
     } );
   }

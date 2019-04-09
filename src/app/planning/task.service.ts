@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
 import {Task} from './domain/task';
 import {Project} from './domain/project';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {catchError, map, tap} from 'rxjs/internal/operators';
 
 
@@ -19,6 +19,9 @@ export class TaskService {
     this.URL = `https://ukma-schedule-back.herokuapp.com/api/task`;
   }
 
+  getArchive(): Observable<Task[]> {
+    return new Observable<Task[]>((resolver) => resolver.next([]));
+  }
 
   getWaitingTasks(): Observable<Task[]> {
     return new Observable<Task[]>((resolver) => resolver.next([]));
@@ -43,7 +46,8 @@ export class TaskService {
   }
 
   update(task: Task): Observable<any> {
-    return new Observable<any>((resolver) => resolver.next(null) );
+    const body = this.mapToBackFormat(task);
+    return this.http.patch(this.URL, body).pipe( tap(data => console.log(data), error => console.error(error)));
   }
 
   delete(task: Task): Observable<any> {
@@ -51,7 +55,8 @@ export class TaskService {
   }
 
   getTasks(from: number, to: number): Observable<any> {
-    return new Observable<any>((resolver) => resolver.next([]) );
+    const p = new HttpParams().set('from', `${from}`).append('to', `${to}`);
+    return this.http.get(this.URL, {params: p}).pipe( tap(data => console.log(data), error => console.error(error)));;
   }
 
 
