@@ -58,7 +58,7 @@ export class FormsComponent implements OnInit {
 
   openTaskForm(task: Task): void {
     if (task) {
-      this.taskForm.setValue(task);
+      this.taskForm.patchValue(task);
 
       if (task && task.project) {
         this.addProjectToTask = true;
@@ -72,7 +72,7 @@ export class FormsComponent implements OnInit {
 
   openProjectForm(project: Project): void {
     if (project) {
-      this.projectForm.setValue(project);
+      this.projectForm.patchValue(project);
     }
     this.template = this.projectTemplate;
     this.showForm = true;
@@ -102,7 +102,7 @@ export class FormsComponent implements OnInit {
   }
 
   private setFormPosition(event): void {
-
+    console.log(event);
     const rect = this.formTemplate.nativeElement.getBoundingClientRect();
     const containerRect = this.containerRef.nativeElement.getBoundingClientRect();
     let top = event.clientY - 100;
@@ -129,7 +129,6 @@ export class FormsComponent implements OnInit {
       id: null,
       title: [null, Validators.required],
       notes: null,
-      repeat: null,
       deadline: null,
       project: null,
       list: null

@@ -1,6 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Task} from '../../domain/task';
+import {Task, TaskList} from '../../domain/task';
 import {PlanningDay} from '../../domain/planning-day';
+import {PlanningService} from '../../planning.service';
+import {FormsService} from '../../forms/forms.service';
 
 
 @Component({
@@ -15,7 +17,7 @@ export class DayPlanComponent implements OnInit {
   @Output() addTask = new EventEmitter<Task>();
   @Output() prevDay = new EventEmitter<any>();
   @Output() nextDay = new EventEmitter<any>();
-  constructor() { }
+  constructor(private planningService: PlanningService, private formService: FormsService) { }
 
   ngOnInit() {
   }
@@ -26,5 +28,19 @@ export class DayPlanComponent implements OnInit {
 
   onNextDay(): void {
     this.nextDay.emit(null);
+  }
+
+  edit(task: Task, event): void {
+    this.formService.openTaskForm(task, event, (result) => {
+      this.planningService.updateTask(task, TaskList.PLANNED);
+    });
+  }
+
+  moveToArchive(task: Task): void {
+    this.planningService.moveTask(task, TaskList.PLANNED, TaskList.ARCHIVE);
+  }
+
+  moveToWaitingList(task: Task): void {
+    this.planningService.moveTask(task, TaskList.PLANNED, TaskList.WAITING);
   }
 }

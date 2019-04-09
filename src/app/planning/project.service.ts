@@ -43,7 +43,7 @@ export class ProjectService {
     const res = {...project} as any;
 
     if (project.deadline) {
-      res.deadline = project.deadline.getMilliseconds();
+      res.deadline = project.deadline.getTime();
     }
 
     return res;

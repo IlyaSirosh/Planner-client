@@ -20,7 +20,8 @@
   <div class="tasks" #scroll>
     <div class="tasks-nested-container">
       <div class="tasks-nested">
-        <day-task *ngFor="let t of day.tasks" [task]="t" class="task-item"></day-task>
+        <day-task *ngFor="let t of day.tasks" [task]="t" class="task-item"
+                  (edit)="edit(t, $event)" (toArchive)="moveToArchive(task)" (toWaiting)="moveToWaitingList(task)"></day-task>
       </div>
     </div>
   </div>

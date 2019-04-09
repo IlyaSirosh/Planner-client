@@ -3,13 +3,15 @@ import {Project} from './project';
 export class Task {
   id: number;
   title: string;
-  project: Project;
-  deadline: Date;
-  begin: Date;
-  end: Date;
-  // repeat: TaskRepeat;
-  position: number;
+  project?: Project;
+  deadline?: Date;
+  begin?: Date;
+  end?: Date;
+  repeat: TaskRepeat;
+  position?: number;
   list: TaskList;
+  notes?: string;
+  planed?: boolean;
 }
 
 export enum TaskList {

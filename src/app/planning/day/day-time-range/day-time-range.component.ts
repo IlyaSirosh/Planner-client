@@ -1,5 +1,6 @@
 import {
-  AfterViewChecked, AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, QueryList, ViewChild,
+  AfterViewChecked, AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, QueryList,
+  ViewChild,
   ViewChildren
 } from '@angular/core';
 import {Task} from '../../domain/task';
@@ -12,7 +13,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
   templateUrl: './day-time-range.component.html',
   styleUrls: ['./day-time-range.component.css']
 })
-export class DayTimeRangeComponent implements OnInit, AfterViewInit{
+export class DayTimeRangeComponent implements OnInit, AfterViewInit, OnChanges{
 
   @Input() numberOfHours: number;
   @Input() startsFrom: number;
@@ -68,6 +69,14 @@ export class DayTimeRangeComponent implements OnInit, AfterViewInit{
     ];
 
     this.initTasks();
+  }
+
+  ngOnChanges() {
+    if (this.tasks) {
+      this.initTasks();
+      this.render();
+      this.setRefsOfTask();
+    }
   }
 
   ngAfterViewInit() {

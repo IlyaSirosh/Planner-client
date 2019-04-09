@@ -142,9 +142,9 @@
 .month-day:first-child{
 }
 
-.month-day:focus{
-  border-color: red;
-}
+/*.month-day:focus{*/
+  /*border-color: red;*/
+/*}*/
 
 .month-day:hover{
   background-color: whitesmoke;

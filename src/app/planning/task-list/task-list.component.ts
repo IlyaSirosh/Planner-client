@@ -1,7 +1,9 @@
 import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {Task} from '../domain/task';
+import {Task, TaskList} from '../domain/task';
 import {FormsService} from '../forms/forms.service';
 import {PlanningService} from '../planning.service';
+import {Observable} from 'rxjs';
+import {Project} from '../domain/project';
 
 
 @Component({
@@ -15,10 +17,22 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   @ViewChild('projectsRef') planingProjectsRef: TemplateRef<any>;
 
   activeTabRef: TemplateRef<any>;
+
+  $waitingList: Observable<Task[]>;
+  $projects: Observable<Project[]>;
+  $archive: Observable<Task[]>;
+
   ctx;
+
+  TaskList = TaskList;
+
   constructor(private formsService: FormsService, private planningService: PlanningService) { }
 
   ngOnInit() {
+    this.$waitingList = this.planningService.$waitingList;
+    this.$projects = this.planningService.$projects;
+    this.$archive = this.planningService.$archive;
+
     this.selectWaitingTab(this.waitingTasksRef);
   }
 
@@ -28,9 +42,9 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   openTaskFrom(e, task = null): void {
     this.formsService.openTaskForm(task, e, (result) => {
       if (task) {
-        this.planningService.updateTask(result);
+        this.planningService.updateTask(result,  TaskList.WAITING);
       } else {
-        this.planningService.addTask(result);
+        this.planningService.addTask(result,  TaskList.WAITING);
       }
     });
   }
@@ -61,4 +75,13 @@ export class TaskListComponent implements OnInit, AfterViewInit {
     this.ctx = {list: this.planningService.$archive};
   }
 
+  moveToArchive(task): void {
+    this.planningService.moveTask(task, TaskList.WAITING, TaskList.ARCHIVE);
+  }
+
+  editTask(task: Task, list: TaskList, event): void {
+    this.formsService.openTaskForm(task, event, (result) => {
+        this.planningService.updateTask(result,  list);
+    });
+  }
 }

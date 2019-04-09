@@ -19,12 +19,16 @@ export class TaskService {
     this.URL = `https://ukma-schedule-back.herokuapp.com/api`;
   }
 
-  getArchive(): Observable<Task[]> {
-    return this.http.get(`${this.URL}/archiveTasks`);
+  getArchive(): Observable<any> {
+    return this.http.get(`${this.URL}/archiveTasks`)
+      .pipe( tap(data => console.log(data), error => console.error(error)),
+        map((tasks: Task[]) => tasks.map(t => this.mapFromBackFormat(t)) ));
   }
 
-  getWaitingTasks(): Observable<Task[]> {
-    return this.http.get(`${this.URL}/pendingTasks`);
+  getWaitingTasks(): Observable<any> {
+    return this.http.get(`${this.URL}/pendingTasks`)
+      .pipe( tap(data => console.log(data), error => console.error(error)),
+      map((tasks: Task[]) => tasks.map(t => this.mapFromBackFormat(t)) ));
   }
 
 
@@ -50,7 +54,9 @@ export class TaskService {
 
   getTasks(from: number, to: number): Observable<any> {
     const p = new HttpParams().set('from', `${from}`).append('to', `${to}`);
-    return this.http.get(`${this.URL}/task`, {params: p}).pipe( tap(data => console.log(data), error => console.error(error)));;
+    return this.http.get(`${this.URL}/task`, {params: p})
+      .pipe( tap(data => console.log(data), error => console.error(error)),
+        map((tasks: Task[]) => tasks.map(t => this.mapFromBackFormat(t)) ));
   }
 
 
@@ -58,23 +64,36 @@ export class TaskService {
     const res = {...task} as any;
 
     if (task.deadline) {
-      res.deadline = task.deadline.getMilliseconds();
+      res.deadline = task.deadline.getTime();
     }
 
     if (task.begin) {
-      res.begin = task.begin.getMilliseconds();
+      res.begin = task.begin.getTime();
     }
 
     if (task.end) {
-      res.end = task.end.getMilliseconds();
+      res.end = task.end.getTime();
     }
 
     return res;
   }
 
   mapFromBackFormat(task: any): Task {
+    const res = {...task} as any;
 
-    return null;
+    if (task.deadline) {
+      res.deadline = new Date(task.deadline);
+    }
+
+    if (task.begin) {
+      res.begin = new Date(task.begin);
+    }
+
+    if (task.end) {
+      res.end = new Date(task.end);
+    }
+
+    return task;
   }
 
   handleError(e): void {

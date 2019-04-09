@@ -34,21 +34,21 @@ export class PlanningService {
 
     this.taskService.getWaitingTasks().subscribe( (tasks: Task[]) => {
       if (tasks) {
-        const a: Task[] = this._waiting.value.push(...tasks) as Task[];
+        const a: Task[] = this._waiting.value.concat(tasks) as Task[];
         this._waiting.next(a);
       }
     });
 
     this.projectService.getProjects().subscribe((projects: Project[]) => {
       if (projects) {
-        const a: Project[] = this._projects.value.push(...projects) as Project[];
+        const a: Project[] = this._projects.value.concat(projects) as Project[];
         this._projects.next(a);
       }
     });
 
     this.taskService.getArchive().subscribe( (tasks: Task[]) => {
       if (tasks) {
-        const a: Task[] = this._archive.value.push(...tasks) as Task[];
+        const a: Task[] = this._archive.value.concat(tasks) as Task[];
         this._archive.next(a);
       }
     });
@@ -139,7 +139,7 @@ export class PlanningService {
             break;
           }
           case TaskList.PLANNED: {
-            this._addTaskToDay(task)
+            this._addTaskToDay(task);
             break;
           }
           case TaskList.ARCHIVE: {
@@ -150,7 +150,9 @@ export class PlanningService {
         }
 
       })
-      .catch(() => {});
+      .catch(() => {
+        task.list = from;
+      });
 
 
 
