@@ -1,6 +1,6 @@
 <div class="widgets">
   <app-calendar class="month-calendar" [month]="month"
-                [currentDay]="day" (prevMonth)="prevMonth()"
+                [currentDay]="day.date" (prevMonth)="prevMonth()"
                 (nextMonth)="nextMonth()" (daySelected)="selectedDay($event)" (today)="onCurrentMonth()"
                 (monthView)="goMonthView($event)"></app-calendar>
   <!--<div class="upcoming-deadlines">-->

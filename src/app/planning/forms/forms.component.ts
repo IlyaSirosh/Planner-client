@@ -82,6 +82,10 @@ export class FormsComponent implements OnInit {
 
   closeForm(): void {
     this.showForm = false;
+    this.taskForm.reset();
+    this.projectForm.reset();
+    this.showProjectOptions = false;
+    this.showTaskOptions = false;
   }
 
   private setFormPosition(event): void {
@@ -117,6 +121,7 @@ export class FormsComponent implements OnInit {
       project: null
     });
 
+
     this.projectForm = this.formBuilder.group({
       id: null,
       name: null,
@@ -131,7 +136,7 @@ export class FormsComponent implements OnInit {
     if (this.callbackFn) {
       this.callbackFn(this.taskForm.value);
     }
-    this.showForm = false;
+    this.closeForm();
 
   }
 

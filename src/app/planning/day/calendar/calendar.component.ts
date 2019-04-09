@@ -10,8 +10,7 @@ import * as moment from 'moment';
 export class CalendarComponent implements OnInit, OnChanges {
 
   @Input() month: PlanningMonth;
-  @Input() currentDay: PlanningDay;
-
+  @Input() currentDay: Date;
 
   @Output() nextMonth = new EventEmitter<Date>();
   @Output() prevMonth = new EventEmitter<Date>();
@@ -35,7 +34,6 @@ export class CalendarComponent implements OnInit, OnChanges {
     if (this.month) {
       this.groupDays();
     }
-
   }
 
   private groupDays(): void {
@@ -101,7 +99,7 @@ export class CalendarComponent implements OnInit, OnChanges {
 
   isSelectedDay(date: Date): boolean {
     if (!this.currentDay) return false;
-    return moment(this.currentDay.date).isSame(moment(date), 'day');
+    return moment(this.currentDay).isSame(moment(date), 'day');
   }
 }
 

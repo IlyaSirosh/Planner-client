@@ -1,8 +1,57 @@
 :host{
   display: block;
   width: 100%;
+  position: relative;
 }
 
 .month-calendar{
   width: 100%;
+}
+
+.close-button{
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.form-button{
+  text-justify: auto;
+  text-align: center;
+  transition: transform 200ms ease-out;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.close-icon{
+  height: 15px;
+  width: 15px;
+  font-size: 15px;
+}
+
+.form-button:focus{
+  border: thin gray solid;
+}
+
+.form-button:hover{
+  color: black;
+}
+
+.form-button:active{
+  transform: scale(0.9);
+}
+
+.deadline-icon{
+  width: 1em;
+  height: 1em;
+  margin-right: 5px;
+  border: thin solid transparent;
+}
+
+.deadline{
+  display: flex;
 }

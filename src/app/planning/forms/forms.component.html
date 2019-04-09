@@ -32,9 +32,9 @@
           <button class="select-button">select</button> or <button class="select-button">create</button> project
         </div>
       </div>
-      <!--<div class="task-deadline">-->
-        <!--<app-calendar></app-calendar>-->
-      <!--</div>-->
+      <div class="task-deadline">
+        <app-deadline-picker formControlName="deadline"></app-deadline-picker>
+      </div>
       <!--<div class="task-repetition">-->
         <!--repetition-->
       <!--</div>-->
@@ -51,7 +51,7 @@
       color
     </div>
     <div class="project-deadline">
-      <app-deadline-picker></app-deadline-picker>
+
     </div>
     <button class="task-options-button" (click)="toggleProjectOptions()">{{projectOptionsLabel}}</button>
     <div class="task-options" *ngIf="showProjectOptions" @optionState>

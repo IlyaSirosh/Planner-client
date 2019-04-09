@@ -1,2 +1,40 @@
-<app-calendar class="month-calendar" [month]=""
-              (daySelected)="onDaySelected($event)" ></app-calendar>
+
+<ng-container *ngIf="!disabled">
+
+  <ng-container *ngIf="!new">
+    <button *ngIf="!showCalendar" (click)="edit()" class="deadline">
+      <div class="task-label-icon deadline-icon">
+        <img src="../../../../assets/icons/deadline.svg">
+      </div>
+      <div class="task-label-title">
+        {{ deadline | date:'MMMM d' }}
+      </div>
+    </button>
+
+    <ng-container *ngIf="showCalendar">
+      <ng-container *ngTemplateOutlet="deadlineSelector">
+
+      </ng-container>
+    </ng-container>
+
+    <button class="close-button form-button" (click)="close()">
+      <div aria-hidden="true" class="close-icon">&times;</div>
+    </button>
+  </ng-container>
+
+  <ng-container *ngIf="new">
+    <button (click)="enable()">
+      add deadline
+    </button>
+  </ng-container>
+
+</ng-container>
+
+
+<ng-template #deadlineSelector>
+  <app-calendar class="month-calendar"
+                [month]="month" [currentDay]="deadline"
+                (daySelected)="onDaySelected($event)"
+                (nextMonth)="nextMonth()" (prevMonth)="prevMonth()" ></app-calendar>
+</ng-template>
+
