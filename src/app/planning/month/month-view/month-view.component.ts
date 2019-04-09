@@ -29,7 +29,7 @@ export class MonthViewComponent implements OnInit {
     const rect = this.elem.nativeElement.getBoundingClientRect();
     this.height = rect.height;
     this.width = rect.width;
-    this.dayHeight = this.height / 5;
+    this.dayHeight = this.height / 6;
     this.dayWidth = this.width / 7;
   }
 

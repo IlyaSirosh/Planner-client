@@ -50,6 +50,10 @@ export class TaskService {
     return new Observable<any>((resolver) => resolver.next(null) );
   }
 
+  getTasks(from: number, to: number): Observable<any> {
+    return new Observable<any>((resolver) => resolver.next([]) );
+  }
+
 
   mapToBackFormat(task: Task): any {
     const res = {...task} as any;

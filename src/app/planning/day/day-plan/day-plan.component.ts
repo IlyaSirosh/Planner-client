@@ -13,10 +13,18 @@ export class DayPlanComponent implements OnInit {
   @Input() day: PlanningDay;
   @Output() updateTasks = new EventEmitter<Task[]>();
   @Output() addTask = new EventEmitter<Task>();
-
+  @Output() prevDay = new EventEmitter<any>();
+  @Output() nextDay = new EventEmitter<any>();
   constructor() { }
 
   ngOnInit() {
   }
 
+  onPrevDay(): void {
+    this.prevDay.emit(null);
+  }
+
+  onNextDay(): void {
+    this.nextDay.emit(null);
+  }
 }

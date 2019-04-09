@@ -25,9 +25,11 @@ import { ProjectPickerComponent } from './forms/project-picker/project-picker.co
 const routes: Routes = [
   { path: '', component: PlanningComponent,
     children: [
-      { path: '', redirectTo: 'day', pathMatch: 'full'},
-      { path: 'day', component: DayComponent },
-      { path: 'month', component: MonthComponent }
+      { path: '', redirectTo: 'current/month', pathMatch: 'full'},
+      { path: 'current/month', component: MonthComponent },
+      { path: 'current/day', component: DayComponent},
+      { path: ':year/:month/:day', component: DayComponent },
+      { path: ':year/:month', component: MonthComponent },
     ]}
 ];
 

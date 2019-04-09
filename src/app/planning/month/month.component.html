@@ -1,1 +1,4 @@
-<app-month-view></app-month-view>
+<app-month-view [month]="month"
+                (nextMonth)="nextMonth()"
+                (prevMonth)="prevMonth()"
+                (selectedDay)="selectedDay($event)"></app-month-view>

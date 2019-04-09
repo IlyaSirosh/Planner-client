@@ -1,7 +1,7 @@
 <div class="current-day">
   <div class="day-title">
     <div class="prev-day day-shift-button">
-      <button>
+      <button (click)="onPrevDay()">
         <span> < </span>
       </button>
     </div>
@@ -9,7 +9,7 @@
       {{ day.date | date: 'EEEE, d' }}
     </div>
     <div class="next-day day-shift-button">
-      <button>
+      <button (click)="onNextDay()">
         <span> > </span>
       </button>
     </div>

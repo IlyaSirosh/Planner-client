@@ -1,13 +1,13 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, Renderer2} from '@angular/core';
 import {PlanningMonth} from '../../domain/planning-month';
 import {PlanningDay} from '../../domain/planning-day';
-
+import * as moment from 'moment';
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnChanges {
 
   @Input() month: PlanningMonth;
   @Input() currentDay: PlanningDay;
@@ -17,6 +17,7 @@ export class CalendarComponent implements OnInit {
   @Output() prevMonth = new EventEmitter<Date>();
   @Output() daySelected = new EventEmitter<Date>();
   @Output() monthView = new EventEmitter<any>();
+  @Output() today = new EventEmitter<any>();
 
   nodes: WeekDayNode[];
   weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sut', 'Sun'];
@@ -27,9 +28,14 @@ export class CalendarComponent implements OnInit {
     const width = rect.width;
     const height = width * 0.80;
     this.renderer.setStyle(this.elem.nativeElement, 'min-height', `${height}px`);
+  }
 
-    this.month = PlanningMonth.MONTH;
-    this.groupDays();
+  ngOnChanges() {
+
+    if (this.month) {
+      this.groupDays();
+    }
+
   }
 
   private groupDays(): void {
@@ -49,7 +55,6 @@ export class CalendarComponent implements OnInit {
       n.daysOfMonth = days;
       return n;
     });
-    console.log(this.nodes);
   }
 
   private groupBy(xs, keyGetter) {
@@ -79,7 +84,7 @@ export class CalendarComponent implements OnInit {
   }
 
   onPrevMonth(): void {
-    this.nextMonth.emit(this.month.date);
+    this.prevMonth.emit(this.month.date);
   }
 
   onDaySelected(day: PlanningDay): void {
@@ -87,14 +92,17 @@ export class CalendarComponent implements OnInit {
   }
 
   onTodaySelected(): void {
-    const today = new Date(Date.now());
-    this.nextMonth.emit(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+    this.today.emit(null);
   }
 
   goMonthView(): void {
-    this.monthView.emit(this.month);
+    this.monthView.emit(this.month.date);
   }
 
+  isSelectedDay(date: Date): boolean {
+    if (!this.currentDay) return false;
+    return moment(this.currentDay.date).isSame(moment(date), 'day');
+  }
 }
 
 class WeekDayNode {

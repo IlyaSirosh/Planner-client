@@ -5,7 +5,7 @@
         <
       </button>
       <button class="month-name" (click)="goMonthView()">
-        {{month.date | date:'MMMM, yyyy'}}
+        {{month?.date | date:'MMMM, yyyy'}}
       </button>
       <button class="next-month-button" (click)="onNextMonth()">
         >
@@ -27,7 +27,7 @@
             *ngFor="let d of dayOfWeek.daysOfMonth"
             [class.weekend]="isWeekend(d.date)"
             [class.anotherMonth]="isNotCurrentMonth(d.date)"
-            [class.selectedDay]="currentDay && currentDay.id === d.id">
+            [class.selectedDay]="isSelectedDay(d.date)">
       <div class="day-number" >
         <span *ngIf="d.date.getDate() === 1">
           {{d.date | date:'MMM'}}
