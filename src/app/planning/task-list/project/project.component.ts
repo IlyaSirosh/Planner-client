@@ -10,11 +10,11 @@ import {Task} from '../../domain/task';
 export class ProjectComponent implements OnInit {
 
   @Input() project: Project;
-  tasks: Task[];
+  tasks: Task[] = [];
   constructor() { }
 
   ngOnInit() {
-    this.tasks = Task.TASKS.slice(0, 4);
+
   }
 
 }

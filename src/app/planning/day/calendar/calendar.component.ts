@@ -1,7 +1,6 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2} from '@angular/core';
-import {PlanningMonthPreview} from '../../domain/planning-month';
-import {PlanningDayPreview} from '../../domain/planning-day';
-import {WeekDay} from '@angular/common';
+import {PlanningMonth} from '../../domain/planning-month';
+import {PlanningDay} from '../../domain/planning-day';
 
 @Component({
   selector: 'app-calendar',
@@ -10,8 +9,8 @@ import {WeekDay} from '@angular/common';
 })
 export class CalendarComponent implements OnInit {
 
-  @Input() month: PlanningMonthPreview;
-  @Input() currentDay: PlanningDayPreview;
+  @Input() month: PlanningMonth;
+  @Input() currentDay: PlanningDay;
 
 
   @Output() nextMonth = new EventEmitter<Date>();
@@ -29,12 +28,12 @@ export class CalendarComponent implements OnInit {
     const height = width * 0.80;
     this.renderer.setStyle(this.elem.nativeElement, 'min-height', `${height}px`);
 
-    this.month = PlanningMonthPreview.MONTH;
+    this.month = PlanningMonth.MONTH;
     this.groupDays();
   }
 
   private groupDays(): void {
-    const temp = this.groupBy(this.month.days, (d: PlanningDayPreview) => {
+    const temp = this.groupBy(this.month.days, (d: PlanningDay) => {
       return d.date.getDay();
     });
 
@@ -83,7 +82,7 @@ export class CalendarComponent implements OnInit {
     this.nextMonth.emit(this.month.date);
   }
 
-  onDaySelected(day: PlanningDayPreview): void {
+  onDaySelected(day: PlanningDay): void {
     this.daySelected.emit(day.date);
   }
 
@@ -100,5 +99,5 @@ export class CalendarComponent implements OnInit {
 
 class WeekDayNode {
   weekDay: string;
-  daysOfMonth: PlanningDayPreview[];
+  daysOfMonth: PlanningDay[];
 }

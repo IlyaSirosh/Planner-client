@@ -18,11 +18,6 @@ export class DayComponent implements OnInit, AfterViewInit {
   constructor(private renderer: Renderer2, private elem: ElementRef, private router: Router) { }
 
   ngOnInit() {
-    this.day = new PlanningDay();
-
-    this.day.tasks = Task.TASKS;
-    this.day.date = new Date(Date.now());
-
 
   }
 

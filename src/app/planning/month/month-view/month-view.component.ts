@@ -1,5 +1,5 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {PlanningMonth} from '../../domain/planning-month';
+import { PlanningMonth} from '../../domain/planning-month';
 
 @Component({
   selector: 'app-month-view',
@@ -25,7 +25,6 @@ export class MonthViewComponent implements OnInit {
   today = new Date(Date.now());
 
   ngOnInit() {
-    this.month = PlanningMonth.MONTH;
     console.log(this.month);
     const rect = this.elem.nativeElement.getBoundingClientRect();
     this.height = rect.height;

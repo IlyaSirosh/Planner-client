@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ControlValueAccessor} from '@angular/forms';
-import {ProjectPreview} from '../../domain/project';
+import {Project} from '../../domain/project';
 
 @Component({
   selector: 'app-project-picker',
@@ -9,9 +9,9 @@ import {ProjectPreview} from '../../domain/project';
 })
 export class ProjectPickerComponent implements OnInit, ControlValueAccessor  {
 
-  project: ProjectPreview;
+  project: Project;
 
-  projects: ProjectPreview[];
+  projects: Project[];
 
   constructor() { }
 
