@@ -21,13 +21,13 @@ export class TaskService {
 
   getArchive(): Observable<any> {
     return this.http.get(`${this.URL}/archiveTasks`)
-      .pipe( tap(data => console.log(data), error => console.error(error)),
+      .pipe( tap(data => console.log('archive', data), error => console.error(error)),
         map((tasks: Task[]) => tasks.map(t => this.mapFromBackFormat(t)) ));
   }
 
   getWaitingTasks(): Observable<any> {
     return this.http.get(`${this.URL}/pendingTasks`)
-      .pipe( tap(data => console.log(data), error => console.error(error)),
+      .pipe( tap(data => console.log('waiting list', data), error => console.error(error)),
       map((tasks: Task[]) => tasks.map(t => this.mapFromBackFormat(t)) ));
   }
 
@@ -39,13 +39,13 @@ export class TaskService {
     return this.http.post(`${this.URL}/task`, body).pipe( map((v: {id: number}) => {
       task.id = v.id;
       return {...task};
-    }), tap(data => console.log(data), error => console.error(error)));
+    }), tap(data => console.log('create', task), error => console.error(error)));
 
   }
 
   update(task: Task): Observable<any> {
     const body = this.mapToBackFormat(task);
-    return this.http.patch(`${this.URL}/task/${task.id}`, body).pipe( tap(data => console.log(data), error => console.error(error)));
+    return this.http.patch(`${this.URL}/task/${task.id}`, body).pipe( tap(data => console.log('update', task), error => console.error(error)));
   }
 
   delete(task: Task): Observable<any> {
@@ -55,7 +55,7 @@ export class TaskService {
   getTasks(from: number, to: number): Observable<any> {
     const p = new HttpParams().set('from', `${from}`).append('to', `${to}`);
     return this.http.get(`${this.URL}/task`, {params: p})
-      .pipe( tap(data => console.log(data), error => console.error(error)),
+      .pipe( tap(data => console.log('all tasks', data), error => console.error(error)),
         map((tasks: Task[]) => tasks.map(t => this.mapFromBackFormat(t)) ));
   }
 
@@ -64,15 +64,15 @@ export class TaskService {
     const res = {...task} as any;
 
     if (task.deadline) {
-      res.deadline = task.deadline.getTime();
+      res.deadline = new Date(task.deadline).getTime();
     }
 
     if (task.begin) {
-      res.begin = task.begin.getTime();
+      res.begin = new Date(task.begin).getTime();
     }
 
     if (task.end) {
-      res.end = task.end.getTime();
+      res.end = new Date(task.end).getTime();
     }
 
     if (task.project) {

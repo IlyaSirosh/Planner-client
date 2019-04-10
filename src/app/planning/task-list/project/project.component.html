@@ -11,9 +11,9 @@
       <div class="deadline-icon">
         <img src="../../../../assets/icons/deadline.svg"/>
       </div>
-      <!--<div class="deadline-date">-->
-        <!--{{project.deadline | date:'dd.MM'}}-->
-      <!--</div>-->
+      <div class="deadline-date">
+        {{project.deadline | date:'dd.MM'}}
+      </div>
     </div>
     <div class="add-task-button">
       <button (click)="addTask($event)">+</button>
@@ -21,9 +21,13 @@
   </div>
 </div>
 <div class="project-tasks">
-  <div class="tasks-nested-container">
-    <day-task *ngFor="let t of project.tasks"
-              [task]="t" [showWaitingButton]="false"
+  <div class="tasks-nested-container" cdkDropList id="WAITING">
+    <day-task *ngFor="let t of project.tasks" [showProject]="false" (toArchive)="toArchive(t)" (edit)="editTask(t, $event)"
+              [task]="t" [showWaitingButton]="false" cdkDrag [cdkDragData]="t"
               class="task-item"></day-task>
   </div>
 </div>
+
+<button class="edit-button" (click)="edit($event)">
+  <img src="../../../../assets/icons/edit.svg">
+</button>

@@ -1,14 +1,15 @@
 :host{
   display: block;
-  border: thin solid #ccc;
+  border: thin solid #f4f4f4;
+  position: relative;
 }
 
 .project-header{
   display: flex;
   justify-content: space-between;
-  background-color: rgba(242, 241, 239, 0.5);
+  background-color: #f9f9f9;
   padding: 10px;
-  border-bottom: thin solid #ccc;
+  border-bottom: thin solid #f4f4f4;
 }
 
 .project-label{
@@ -77,7 +78,7 @@
 }
 
 .project-tasks{
-  border: thin solid rgba(242, 241, 239, 0.5);
+  border: thin solid #f4f4f4;
   border-top: none;
 
   min-height: 200px;
@@ -98,4 +99,34 @@
 
 .task-item{
   margin: 0 10px 10px 10px;
+}
+
+.edit-button {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 5px;
+  color: gray;
+  cursor: pointer;
+  transition: color 200ms ease-out, transform 200ms ease-out;
+}
+
+.edit-button > img {
+  width: 20px;
+  height: 20px;
+}
+
+:host:hover > .edit-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.edit-button:hover {
+  color: black;
+}
+
+.edit-button:active {
+  transform: scale(0.9);
 }

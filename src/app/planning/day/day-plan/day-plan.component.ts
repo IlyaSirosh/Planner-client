@@ -43,4 +43,14 @@ export class DayPlanComponent implements OnInit {
   moveToWaitingList(task: Task): void {
     this.planningService.moveTask(task, TaskList.PLANNED, TaskList.WAITING);
   }
+
+  drop(event): void {
+    console.log(event);
+    const task = event.item.data as Task;
+    task.begin = this.day.date;
+    task.begin.setHours(12, 30);
+    this.planningService.moveTask(task, TaskList[event.previousContainer.id], TaskList[event.container.id], event);
+
+    console.log(task);
+  }
 }

@@ -29,10 +29,10 @@
   </div>
   <div class="list-container add-button-offset">
     <div class="list-container-nested">
-      <div>
-        <day-task *ngFor="let t of (list | async)"
-                  [task]="t" [isPlaned]="false"
-                  [showWaitingButton]="false"
+      <div cdkDropList [cdkDropListData]="($waitingList | async)" id="WAITING">
+        <day-task *ngFor="let t of ($waitingList | async)"
+                  [task]="t" [isPlaned]="false" cdkDrag
+                  [showWaitingButton]="false" [cdkDragData]="t"
                   (toArchive)="moveToArchive(t)"
                   (edit)="editTask(t, TaskList.WAITING, $event)"
                   class="list-item"></day-task>
@@ -50,7 +50,7 @@
   <div class="list-container add-button-offset">
     <div class="list-container-nested">
       <div>
-        <planning-project *ngFor="let p of (list | async)" [project]="p" class="list-item"></planning-project>
+        <planning-project *ngFor="let p of ($projects | async)" [project]="p" class="list-item"></planning-project>
       </div>
     </div>
   </div>
@@ -59,9 +59,9 @@
 <ng-template #archiveRef let-list="list">
   <div class="list-container">
     <div class="list-container-nested offset">
-      <div>
-        <day-task *ngFor="let t of (list | async)" [showArchiveButton]="false"
-                  [task]="t" [isPlaned]="false" (edit)="editTask(t, TaskList.WAITING, $event)" (toWaiting)="moveToWaiting(t)"
+      <div  cdkDropList [cdkDropListData]="($archive | async)" id="ARCHIVE">
+        <day-task *ngFor="let t of ($archive | async)" [showArchiveButton]="false" cdkDrag [cdkDragData]="t"
+                  [task]="t" [isPlaned]="false" (edit)="editTask(t, TaskList.ARCHIVE, $event)" (toWaiting)="moveToWaiting(t)"
                   class="list-item"></day-task>
       </div>
     </div>

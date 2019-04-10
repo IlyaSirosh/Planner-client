@@ -16,6 +16,7 @@ export class DayTaskComponent implements OnInit {
   @Input() showArchiveButton = true;
   @Input() showWaitingButton = true;
   @Input() showEditButton = true;
+  @Input() showProject = true;
 
   showNotesTrigger = true;
   showActionButtons: boolean;

@@ -28,4 +28,23 @@ export class ProjectComponent implements OnInit {
       this.planningService.addTask(result, TaskList.WAITING);
     });
   }
+
+  edit(event): void {
+    this.formsService.openProjectForm(this.project, event, (result) => {
+      this.planningService.updateProject(result);
+    });
+  }
+
+  editTask(task: Task, event): void {
+    task.project = this.project;
+    this.formsService.openTaskForm(task, event, (result) => {
+      this.planningService.updateTask(result, TaskList.WAITING);
+    });
+  }
+
+  toArchive(task: Task): void {
+    this.planningService.moveTask(task, TaskList.WAITING, TaskList.ARCHIVE);
+  }
+
+
 }

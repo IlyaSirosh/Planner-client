@@ -1,5 +1,6 @@
 import {
   AfterViewChecked, AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, QueryList,
+  SimpleChanges,
   ViewChild,
   ViewChildren
 } from '@angular/core';
@@ -71,11 +72,8 @@ export class DayTimeRangeComponent implements OnInit, AfterViewInit, OnChanges{
     this.initTasks();
   }
 
-  ngOnChanges() {
-    if (this.tasks) {
-      this.initTasks();
-      this.render();
-    }
+  ngOnChanges(changes: SimpleChanges) {
+
   }
 
   ngAfterViewInit() {
@@ -115,21 +113,16 @@ export class DayTimeRangeComponent implements OnInit, AfterViewInit, OnChanges{
   initTasks(): void {
     this._taskNodes.next( this.tasks
       .filter(task => task.begin)
-      .map((task, i) => {
-        const node = new TaskNode();
-        node.task = {...task};
-        node.color = this.colors[i];
-        node.duration = this.duration(task);
-        node.height = this.heightOfTask(task);
-        node.top = this.offsetTaskStart(task);
-        node.left = this.offsetToTimeline - this.taskHalfWidth;
-        return node;
-    }));
+      .map((task, i) => this.map(task, i)));
   }
 
   addTask(task: Task): void {
-
+    const arr = [...this._taskNodes.value];
+    arr.push(this.map(task));
+    this._taskNodes.next(arr );
     this.setRefsOfTask();
+    this.render();
+    console.log(arr);
   }
 
   updateTask(task: Task): void {
@@ -174,6 +167,17 @@ export class DayTimeRangeComponent implements OnInit, AfterViewInit, OnChanges{
     let s = hours > 0 ? `${hours}h ` : '';
     s += minutes > 0 ? `${minutes}m` : '';
     return s;
+  }
+
+  private map(task: Task, i = this.tasks.length): TaskNode {
+    const node = new TaskNode();
+    node.task = {...task};
+    node.color = this.colors[i];
+    node.duration = this.duration(task);
+    node.height = this.heightOfTask(task);
+    node.top = this.offsetTaskStart(task);
+    node.left = this.offsetToTimeline - this.taskHalfWidth;
+    return node;
   }
 
 }

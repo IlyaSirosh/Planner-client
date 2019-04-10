@@ -9,6 +9,7 @@ const moment = extendMoment(Moment);
 import {PlanningDay} from './domain/planning-day';
 import {Project} from './domain/project';
 import {ProjectService} from './project.service';
+import {DayTimeRangeComponent} from './day/day-time-range/day-time-range.component';
 
 
 @Injectable({
@@ -16,7 +17,7 @@ import {ProjectService} from './project.service';
 })
 export class PlanningService {
 
-
+  timeRange: DayTimeRangeComponent;
 
   private _waiting = new BehaviorSubject<Task[]>([]);
   public readonly $waitingList = this._waiting.asObservable();
@@ -62,7 +63,7 @@ export class PlanningService {
         if (list === TaskList.WAITING) {
           this._addTaskToWaiting(t);
         } else {
-          this._addTaskToDay(t);
+          this._addTaskToDay(t, event);
         }
       })
       .catch(() => {});
@@ -84,12 +85,17 @@ export class PlanningService {
     }
   }
 
-  private _addTaskToDay(task: Task): void {
+  private _addTaskToDay(task: Task, event): void {
    const index = this._days.findIndex(d => moment(d.date).isSame(moment(task.begin), 'day'));
 
    if (index !== -1) {
      this._days[index].tasks.push(task);
+   } else {
+     const d = this.getDay(task.begin);
+     d.tasks.push(task);
    }
+
+    this.timeRange.addTask(task);
   }
 
   private _addTaskToArchive(task: Task): void {
@@ -114,7 +120,8 @@ export class PlanningService {
       .catch(() => {});
   }
 
-  moveTask(task: Task, from: TaskList, to: TaskList): void {
+  moveTask(task: Task, from: TaskList, to: TaskList, event = null): void {
+    console.log(task, from, to);
     task.list = to;
     this.taskService.update(task).toPromise()
       .then(() => {
@@ -141,7 +148,7 @@ export class PlanningService {
             break;
           }
           case TaskList.PLANNED: {
-            this._addTaskToDay(task);
+            this._addTaskToDay(task, event);
             break;
           }
           case TaskList.ARCHIVE: {
@@ -263,7 +270,7 @@ export class PlanningService {
   private _addProject(project: Project): void {
     const arr = [...this._projects.value];
     arr.unshift(project);
-    this._projects.next(arr);
+    this._projects.next([...arr]);
   }
 
   updateProject(project: Project): void {
@@ -275,11 +282,18 @@ export class PlanningService {
   }
 
   private _updateProject(project: Project): void {
-    const projects = this._projects.value;
+    const projects = [...this._projects.value];
     const index = projects.findIndex(p => p.id === project.id);
     if (index !== -1) {
       project.tasks = projects[index].tasks;
       projects[index] = project;
+      project.tasks.forEach(t => {
+        t.project = project;
+        this._updateTask(t);
+      });
+
+
+      this._projects.next(projects);
     }
   }
 

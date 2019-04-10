@@ -29,7 +29,7 @@
               {{ task.deadline | date:'d.MM' }}
           </div>
         </div>
-        <div class="project task-label" *ngIf="task.project">
+        <div class="project task-label" *ngIf="task.project && showProject">
           <div class="task-label-icon project-icon"
                [style.backgroundColor]="task.project.color ? task.project.color : 'transparent'">
           </div>

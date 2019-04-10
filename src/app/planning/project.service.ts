@@ -31,7 +31,7 @@ export class ProjectService {
   update(project: Project): Observable<any> {
     const body = this.mapToBackFormat(project);
     const hd = new HttpHeaders({'content-type': 'application/json'});
-    return this.http.patch(this.URL, body, {headers: hd})
+    return this.http.patch(`${this.URL}/${project.id}`, body, {headers: hd})
       .pipe(tap(data => console.log(data), error => console.error(error)));
   }
 
@@ -45,7 +45,7 @@ export class ProjectService {
     const res = {...project} as any;
 
     if (project.deadline) {
-      res.deadline = project.deadline.getTime();
+      res.deadline = new Date(project.deadline).getTime();
     }
 
     return res;
