@@ -450,5 +450,6 @@ export class PlanningService {
     this._days.push(...list);
     this.sortDays(this._days);
   }
+
 }
 
