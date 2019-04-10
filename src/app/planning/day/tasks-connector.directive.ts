@@ -41,10 +41,6 @@ export class TasksConnectorDirective implements AfterContentInit, OnInit , OnDes
 
   }
 
-  ngAfterContentInit() {
-    this.planningService.timeRange = this.timeRange;
-  }
-
   set nodes(values: TaskNode[]) {
     // console.log('set ', values);
     this._nodes = values;
@@ -56,6 +52,7 @@ export class TasksConnectorDirective implements AfterContentInit, OnInit , OnDes
 
   ngAfterContentInit() {
     this.createSVG();
+    this.planningService.timeRange = this.timeRange;
 
     this.timeRange.$taskNodes.subscribe( nodes => {
       this.nodes = nodes ? [...nodes] : [];
