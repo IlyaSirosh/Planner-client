@@ -29,9 +29,9 @@
               {{ task.deadline | date:'d.MM' }}
           </div>
         </div>
-        <div class="project task-label" *ngIf="task.project">
+        <div class="project task-label" *ngIf="task.project && showProject">
           <div class="task-label-icon project-icon"
-               [style]="task.project.color ? {'background-color': task.project.color} : {'border-color':'#ccc'}">
+               [style.backgroundColor]="task.project.color ? task.project.color : 'transparent'">
           </div>
           <div class="task-label-title">
             {{task.project.name}}
@@ -56,14 +56,14 @@
 </div>
 
 
-<div class="action-buttons" *ngIf="showActionButtons && isPlaned" @taskButtonsState>
-  <div class="action-button">
-    waiting
-  </div>
-  <div class="action-button">
-    archive
-  </div>
-  <div class="action-button">
-    move
-  </div>
+<div class="action-buttons" *ngIf="showActionButtons" @taskButtonsState>
+  <button class="action-button" *ngIf="showWaitingButton" (click)="onWaiting()" title="to waiting list">
+    <img class="button-icon" src="../../../assets/icons/stopwatch.svg">
+  </button>
+  <button class="action-button" *ngIf="showArchiveButton" (click)="onArchive()" title="to archive">
+    <img class="button-icon" src="../../../assets/icons/archive.svg">
+  </button>
+  <button class="action-button" *ngIf="showEditButton" (click)="onEdit($event)" title="edit">
+    <img class="button-icon" src="../../../assets/icons/edit.svg">
+  </button>
 </div>

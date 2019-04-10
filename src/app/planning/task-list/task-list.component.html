@@ -29,16 +29,19 @@
   </div>
   <div class="list-container add-button-offset">
     <div class="list-container-nested">
-      <div cdkDropList>
-        <day-task *ngFor="let t of list | async" [showNotes]="false" cdkDrag
-                  [task]="t" [isPlaned]="false"
+      <div cdkDropList [cdkDropListData]="($waitingList | async)" id="WAITING">
+        <day-task *ngFor="let t of ($waitingList | async)"
+                  [task]="t" [isPlaned]="false" cdkDrag
+                  [showWaitingButton]="false" [cdkDragData]="t"
+                  (toArchive)="moveToArchive(t)"
+                  (edit)="editTask(t, TaskList.WAITING, $event)"
                   class="list-item"></day-task>
       </div>
     </div>
   </div>
 </ng-template>
 
-<ng-template #projectsRef>
+<ng-template #projectsRef let-list="list">
   <div class="add-task-button-container">
     <button class="add-task-button" (click)="openProjectForm($event)">
       <span>new project</span>
@@ -46,24 +49,21 @@
   </div>
   <div class="list-container add-button-offset">
     <div class="list-container-nested">
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
-      <planning-project class="list-item"></planning-project>
+      <div>
+        <planning-project *ngFor="let p of ($projects | async)" [project]="p" class="list-item"></planning-project>
+      </div>
     </div>
   </div>
 </ng-template>
 
-<ng-template #archiveRef>
+<ng-template #archiveRef let-list="list">
   <div class="list-container">
-    <div class="list-container-nested">
-      archive
+    <div class="list-container-nested offset">
+      <div  cdkDropList [cdkDropListData]="($archive | async)" id="ARCHIVE">
+        <day-task *ngFor="let t of ($archive | async)" [showArchiveButton]="false" cdkDrag [cdkDragData]="t"
+                  [task]="t" [isPlaned]="false" (edit)="editTask(t, TaskList.ARCHIVE, $event)" (toWaiting)="moveToWaiting(t)"
+                  class="list-item"></day-task>
+      </div>
     </div>
   </div>
 </ng-template>

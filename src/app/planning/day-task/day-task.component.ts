@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 import {Task} from '../domain/task';
 import {notesStateTrigger, taskButtonsStateTrigger} from './day-task.animations';
 
@@ -12,14 +12,24 @@ export class DayTaskComponent implements OnInit {
   @Input() task: Task;
   @Input() isPlaned = true;
   @Input() showNotes = true;
+
+  @Input() showArchiveButton = true;
+  @Input() showWaitingButton = true;
+  @Input() showEditButton = true;
+  @Input() showProject = true;
+
   showNotesTrigger = true;
   showActionButtons: boolean;
+  @Output() toWaiting = new EventEmitter();
+  @Output() toArchive = new EventEmitter();
+  @Output() edit = new EventEmitter();
+
   constructor(public elem: ElementRef) {
     this.showActionButtons = false;
   }
 
   ngOnInit() {
-    if (!this.showNotes){
+    if (!this.showNotes) {
       this.showNotesTrigger = false;
     }
   }
@@ -39,4 +49,15 @@ export class DayTaskComponent implements OnInit {
     }
   }
 
+  onWaiting(): void {
+    this.toWaiting.emit(null);
+  }
+
+  onEdit($event): void {
+    this.edit.emit($event);
+  }
+
+  onArchive(): void {
+    this.toArchive.emit(null);
+  }
 }

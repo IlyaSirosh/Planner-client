@@ -3,14 +3,12 @@ import {Task} from './task';
 export class Project {
   id: number;
   name: string;
-  deadline: Date;
   color: string;
+  deadline: Date;
   tasks: Task[];
+
+  constructor() {
+    this.tasks = [];
+  }
 }
 
-export class ProjectPreview {
-  id: number;
-  name: string;
-  color: string;
-  deadline: Date;
-}

@@ -21,7 +21,7 @@
 </div>
 <div class="month-days">
   <button class="month-day"  [class.weekend]="d.date.getDay() === 0 || d.date.getDay() === 6"
-       *ngFor="let d of month.days" (click)="onDaySelected(d)">
+       *ngFor="let d of month.days" (click)="onDaySelected(d.date)">
     <div class="day-number" [class.currentMonth]="d.date.getMonth() === month.date.getMonth()">
      <span *ngIf="d.date.getDate() === 1">
        {{d.date | date:'MMMM'}}

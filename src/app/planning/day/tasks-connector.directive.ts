@@ -6,11 +6,12 @@ import {DayTimeRangeComponent, TaskNode} from './day-time-range/day-time-range.c
 import {DayTaskComponent} from '../day-task/day-task.component';
 import {skipUntil} from 'rxjs/internal/operators';
 import {TaskScrollableDirective} from './task-scrollable.directive';
+import {PlanningService} from '../planning.service';
 
 @Directive({
   selector: '[tasksConnector]'
 })
-export class TasksConnectorDirective implements AfterContentInit, OnInit , OnDestroy {
+export class TasksConnectorDirective implements AfterContentInit, OnInit , OnDestroy, AfterContentInit {
   @Input() scrollable: HTMLElement;
   // @ContentChild(TaskScrollableDirective) scrollable: TaskScrollableDirective;
   @ContentChild(DayTimeRangeComponent) timeRange: DayTimeRangeComponent;
@@ -18,7 +19,7 @@ export class TasksConnectorDirective implements AfterContentInit, OnInit , OnDes
   svg: HTMLElement;
   connectors: object[] = [];
   private _nodes: TaskNode[] = [];
-  constructor(private elem: ElementRef, private renderer: Renderer2) { }
+  constructor(private elem: ElementRef, private renderer: Renderer2, private planningService: PlanningService) { }
 
   @HostListener('window:resize')
   onWindowResize(): void {
@@ -40,7 +41,6 @@ export class TasksConnectorDirective implements AfterContentInit, OnInit , OnDes
 
   }
 
-
   set nodes(values: TaskNode[]) {
     // console.log('set ', values);
     this._nodes = values;
@@ -52,6 +52,7 @@ export class TasksConnectorDirective implements AfterContentInit, OnInit , OnDes
 
   ngAfterContentInit() {
     this.createSVG();
+    this.planningService.timeRange = this.timeRange;
 
     this.timeRange.$taskNodes.subscribe( nodes => {
       this.nodes = nodes ? [...nodes] : [];

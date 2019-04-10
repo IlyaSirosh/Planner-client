@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, Renderer2, TemplateRef, ViewChild} from '@angular/core';
 import {optionStateTrigger} from './forms.animations';
 import {FormsService} from './forms.service';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Project} from '../domain/project';
 import {Task} from '../domain/task';
 
@@ -30,6 +30,10 @@ export class FormsComponent implements OnInit {
 
   taskForm: FormGroup;
   projectForm: FormGroup;
+  form: FormGroup;
+
+  addProjectToTask = false;
+  showProjectSelectionForm = true;
 
   callbackFn;
 
@@ -54,18 +58,25 @@ export class FormsComponent implements OnInit {
 
   openTaskForm(task: Task): void {
     if (task) {
-      this.taskForm.setValue(task);
+      this.taskForm.patchValue(task);
+
+      if (task && task.project) {
+        this.addProjectToTask = true;
+        this.showProjectSelectionForm = true;
+      }
     }
     this.template = this.taskTemplate;
     this.showForm = true;
+    this.form = this.taskForm;
   }
 
   openProjectForm(project: Project): void {
     if (project) {
-      this.projectForm.setValue(project);
+      this.projectForm.patchValue(project);
     }
     this.template = this.projectTemplate;
     this.showForm = true;
+    this.form = this.projectForm;
   }
 
   toggleTaskOptions(): void {
@@ -82,10 +93,15 @@ export class FormsComponent implements OnInit {
 
   closeForm(): void {
     this.showForm = false;
+    this.taskForm.reset();
+    this.projectForm.reset();
+    this.showProjectOptions = false;
+    this.showTaskOptions = false;
+    this.addProjectToTask = false;
+    this.showProjectSelectionForm = true;
   }
 
   private setFormPosition(event): void {
-
     const rect = this.formTemplate.nativeElement.getBoundingClientRect();
     const containerRect = this.containerRef.nativeElement.getBoundingClientRect();
     let top = event.clientY - 100;
@@ -110,31 +126,74 @@ export class FormsComponent implements OnInit {
   private createForms(): void {
     this.taskForm = this.formBuilder.group({
       id: null,
-      title: null,
+      title: [null, Validators.required],
       notes: null,
-      repeat: null,
       deadline: null,
-      project: null
+      project: null,
+      list: null
     });
+
 
     this.projectForm = this.formBuilder.group({
       id: null,
-      name: null,
+      name: [null, Validators.required],
       deadline: null,
-      color: null
+      color: null,
+      notes: null
     });
   }
 
   save(): void {
-    console.log(this.taskForm.value);
+    console.log(this.form.value);
 
-    if (this.callbackFn) {
-      this.callbackFn(this.taskForm.value);
+    if (this.form.valid) {
+      if (this.callbackFn) {
+
+        this.callbackFn(this.form.value);
+      }
+      this.closeForm();
+    } else {
+
+      this.markTouched(this.form);
     }
-    this.showForm = false;
+
 
   }
 
+  selectProject(): void {
+    this.addProjectToTask = true;
+    this.showProjectSelectionForm = true;
+  }
 
+  createProject(): void {
+    this.addProjectToTask = true;
+    this.showProjectSelectionForm = false;
+  }
 
+  removeTaskProject(): void {
+    this.addProjectToTask = false;
+  }
+
+  private markTouched(form: FormGroup): void {
+    Object.keys(form.controls).forEach(field => {
+      const control = form.get(field);
+      control.markAsTouched({ onlySelf: true });
+
+      if((control as FormGroup).controls)
+        this.markTouched(control as FormGroup);
+
+      if((control as FormArray).controls) {
+        Array.from((control as FormArray).controls).forEach((x:FormGroup) => this.markTouched(x));
+      }
+
+    });
+  }
+
+  get taskName() {
+    return this.taskForm.get('title');
+  }
+
+  get projectName() {
+    return this.projectForm.get('name');
+  }
 }

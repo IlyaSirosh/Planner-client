@@ -132,6 +132,7 @@
   transition: transform 200ms ease-out, border-color 200ms ease-out;
   min-height: 35px;
   min-width: 35px;
+  margin: 0;
 }
 
 .month-day.selectedDay{
@@ -141,9 +142,9 @@
 .month-day:first-child{
 }
 
-.month-day:focus{
-  border-color: red;
-}
+/*.month-day:focus{*/
+  /*border-color: red;*/
+/*}*/
 
 .month-day:hover{
   background-color: whitesmoke;

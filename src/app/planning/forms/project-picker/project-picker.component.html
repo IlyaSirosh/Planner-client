@@ -1,8 +1,32 @@
-<div *ngIf="project">
-  {{project.name}}
+
+<ng-template let-project="project" #projectRef>
+  <div class="project-label" >
+    <div class="project-color" [style.backgroundColor]="project.color ? project.color : 'transparent'">
+
+    </div>
+    <div class="project-name">
+      {{project.name}}
+    </div>
+  </div>
+</ng-template>
+
+<div *ngIf="currentProject" class="project-preview">
+  <div class="project-view" (click)="edit()">
+    <ng-container [ngTemplateOutlet]="projectRef" [ngTemplateOutletContext]="{project: currentProject}"></ng-container>
+  </div>
+  <button class="close-button form-button" (click)="onClose()">
+    <div aria-hidden="true" class="close-icon">&times;</div>
+  </button>
 </div>
-<div *ngIf="!project">
-  <div *ngFor="let p of projects">
-    {{p.name}}
+<div *ngIf="showList" class="project-list">
+  <div class="project-list-nested">
+    <div *ngFor="let p of $projects | async" class="project-item" (click)="select(p)">
+      <ng-container [ngTemplateOutlet]="projectRef" [ngTemplateOutletContext]="{project: p}"></ng-container>
+    </div>
+  </div>
+  <div *ngIf="($projects | async).length === 0">
+    no projects yet
   </div>
 </div>
+
+

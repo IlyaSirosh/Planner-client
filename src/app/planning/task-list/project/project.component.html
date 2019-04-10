@@ -1,31 +1,33 @@
 <div class="project-header">
   <div class="project-label">
-    <div class="project-icon">
+    <div class="project-icon" [style.backgroundColor]="project.color ? project.color : 'transparent'" >
     </div>
     <div class="project-name">
-      Project 2
+      {{project.name}}
     </div>
   </div>
   <div class="project-info">
-    <div class="deadline">
+    <div class="deadline" *ngIf="project.deadline">
       <div class="deadline-icon">
         <img src="../../../../assets/icons/deadline.svg"/>
       </div>
       <div class="deadline-date">
-        28.03
+        {{project.deadline | date:'dd.MM'}}
       </div>
     </div>
     <div class="add-task-button">
-      <button>+</button>
+      <button (click)="addTask($event)">+</button>
     </div>
   </div>
 </div>
 <div class="project-tasks">
-  <div class="tasks-nested-container">
-    <day-task *ngFor="let t of tasks"
-              [task]="t"
-              [isPlaned]="false"
-              [showNotes]="false"
+  <div class="tasks-nested-container" cdkDropList id="WAITING">
+    <day-task *ngFor="let t of project.tasks" [showProject]="false" (toArchive)="toArchive(t)" (edit)="editTask(t, $event)"
+              [task]="t" [showWaitingButton]="false" cdkDrag [cdkDragData]="t"
               class="task-item"></day-task>
   </div>
 </div>
+
+<button class="edit-button" (click)="edit($event)">
+  <img src="../../../../assets/icons/edit.svg">
+</button>
