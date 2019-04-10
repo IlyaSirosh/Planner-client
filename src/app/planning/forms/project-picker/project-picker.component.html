@@ -1,6 +1,6 @@
 
 <ng-template let-project="project" #projectRef>
-  <div class="project-label">
+  <div class="project-label" >
     <div class="project-color" [style.backgroundColor]="project.color ? project.color : 'transparent'">
 
     </div>
@@ -23,6 +23,9 @@
     <div *ngFor="let p of $projects | async" class="project-item" (click)="select(p)">
       <ng-container [ngTemplateOutlet]="projectRef" [ngTemplateOutletContext]="{project: p}"></ng-container>
     </div>
+  </div>
+  <div *ngIf="($projects | async).length === 0">
+    no projects yet
   </div>
 </div>
 

@@ -102,7 +102,6 @@ export class FormsComponent implements OnInit {
   }
 
   private setFormPosition(event): void {
-    console.log(event);
     const rect = this.formTemplate.nativeElement.getBoundingClientRect();
     const containerRect = this.containerRef.nativeElement.getBoundingClientRect();
     let top = event.clientY - 100;

@@ -36,7 +36,9 @@ export class ProjectService {
   }
 
   getProjects(): Observable<any> {
-    return new Observable<Task[]>((resolver) => resolver.next([]));
+    return this.http.get(this.URL)
+      .pipe(tap(data => console.log(data), error => console.error(error)),
+        map((projects: Project[]) => projects.map(p => this.mapFromBackFormat(p))));
   }
 
   mapToBackFormat(project: Project): any {
@@ -49,4 +51,35 @@ export class ProjectService {
     return res;
   }
 
+  mapFromBackFormat(project: any): Project {
+    const res = {...project} as Project;
+
+    if (project.deadline) {
+      res.deadline = new Date(project.deadline);
+    }
+
+    if (project.tasks) {
+      res.tasks = project.tasks.map(t => this.mapTaskFromBackFormat(t));
+    }
+
+    return res;
+  }
+
+  mapTaskFromBackFormat(task: any): Task {
+    const res = {...task} as any;
+
+    if (task.deadline) {
+      res.deadline = new Date(task.deadline);
+    }
+
+    if (task.begin) {
+      res.begin = new Date(task.begin);
+    }
+
+    if (task.end) {
+      res.end = new Date(task.end);
+    }
+
+    return task;
+  }
 }

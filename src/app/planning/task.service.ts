@@ -45,7 +45,7 @@ export class TaskService {
 
   update(task: Task): Observable<any> {
     const body = this.mapToBackFormat(task);
-    return this.http.patch(`${this.URL}/task`, body).pipe( tap(data => console.log(data), error => console.error(error)));
+    return this.http.patch(`${this.URL}/task/${task.id}`, body).pipe( tap(data => console.log(data), error => console.error(error)));
   }
 
   delete(task: Task): Observable<any> {
@@ -73,6 +73,10 @@ export class TaskService {
 
     if (task.end) {
       res.end = task.end.getTime();
+    }
+
+    if (task.project) {
+      res.project = task.project.id;
     }
 
     return res;

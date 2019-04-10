@@ -82,7 +82,7 @@
 }
 
 .action-button:active{
-  background-color: rgba(208, 207, 205, 0.64);
+  background-color: rgb(205, 205, 205);
 }
 
 .button-icon{
@@ -100,7 +100,7 @@
 .task-label{
   margin-left: 10px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .task-label-title{
@@ -121,7 +121,6 @@
 .project-icon{
   width: 0.7em;
   height: 0.7em;
-  background-color: orange;
   border-radius:50%;
   border: thin solid transparent;
 }

@@ -75,7 +75,6 @@ export class DayTimeRangeComponent implements OnInit, AfterViewInit, OnChanges{
     if (this.tasks) {
       this.initTasks();
       this.render();
-      this.setRefsOfTask();
     }
   }
 

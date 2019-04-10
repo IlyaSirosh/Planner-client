@@ -11,9 +11,9 @@
       <div class="deadline-icon">
         <img src="../../../../assets/icons/deadline.svg"/>
       </div>
-      <div class="deadline-date">
-        {{project.deadline | date:'dd.MM'}}
-      </div>
+      <!--<div class="deadline-date">-->
+        <!--{{project.deadline | date:'dd.MM'}}-->
+      <!--</div>-->
     </div>
     <div class="add-task-button">
       <button (click)="addTask($event)">+</button>
@@ -24,8 +24,6 @@
   <div class="tasks-nested-container">
     <day-task *ngFor="let t of project.tasks"
               [task]="t" [showWaitingButton]="false"
-              [isPlaned]="false"
-              [showNotes]="false"
               class="task-item"></day-task>
   </div>
 </div>

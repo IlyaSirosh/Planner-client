@@ -121,6 +121,10 @@
   padding-top: 50px;
 }
 
+.offset{
+  padding-top: 15px;
+}
+
 .list-item{
   margin: 0 15px 15px 15px;
 }

@@ -25,7 +25,7 @@ export class ProjectComponent implements OnInit {
     task.project = this.project;
 
     this.formsService.openTaskForm(task, event, (result) => {
-      this.planningService.addTask(result);
+      this.planningService.addTask(result, TaskList.WAITING);
     });
   }
 }

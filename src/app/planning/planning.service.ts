@@ -43,6 +43,7 @@ export class PlanningService {
       if (projects) {
         const a: Project[] = this._projects.value.concat(projects) as Project[];
         this._projects.next(a);
+        console.log(projects);
       }
     });
 
@@ -76,8 +77,9 @@ export class PlanningService {
 
       const projects = this._projects.value;
       const index = projects.findIndex(p => p.id === task.project.id);
-      if (index !== -1) {
+      if (index < 0) {
         projects[index].tasks.unshift(task);
+        this._projects.next(this._projects.value);
       }
     }
   }

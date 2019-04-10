@@ -84,4 +84,8 @@ export class TaskListComponent implements OnInit, AfterViewInit {
         this.planningService.updateTask(result,  list);
     });
   }
+
+  moveToWaiting(task): void {
+    this.planningService.moveTask(task, TaskList.ARCHIVE, TaskList.WAITING);
+  }
 }

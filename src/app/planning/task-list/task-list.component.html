@@ -58,10 +58,10 @@
 
 <ng-template #archiveRef let-list="list">
   <div class="list-container">
-    <div class="list-container-nested">
+    <div class="list-container-nested offset">
       <div>
         <day-task *ngFor="let t of (list | async)" [showArchiveButton]="false"
-                  [task]="t" [isPlaned]="false" (edit)="editTask(t, TaskList.WAITING, $event)"
+                  [task]="t" [isPlaned]="false" (edit)="editTask(t, TaskList.WAITING, $event)" (toWaiting)="moveToWaiting(t)"
                   class="list-item"></day-task>
       </div>
     </div>

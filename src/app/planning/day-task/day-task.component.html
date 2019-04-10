@@ -31,7 +31,7 @@
         </div>
         <div class="project task-label" *ngIf="task.project">
           <div class="task-label-icon project-icon"
-               [style]="task.project.color ? {'background-color': task.project.color} : {'border-color':'#ccc'}">
+               [style.backgroundColor]="task.project.color ? task.project.color : 'transparent'">
           </div>
           <div class="task-label-title">
             {{task.project.name}}
