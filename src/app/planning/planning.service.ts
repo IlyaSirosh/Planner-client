@@ -357,9 +357,6 @@ export class PlanningService {
     let begin = moment(date).startOf('month');
     let end = moment(date).endOf('month');
 
-    // begin = begin.subtract( (begin.day() + 6) % 7, 'days');
-    // end = end.add( ( (7 - end.day())  % 7), 'days');
-
     begin = begin.startOf('isoWeek');
     end = end.endOf('isoWeek');
 
@@ -380,6 +377,7 @@ export class PlanningService {
     const from = moment(interval.from);
     const to = moment(interval.to);
     let days = this._days.filter((day) => moment(day.date).isBetween(from, to, 'day', '[]'));
+    console.log('days before ', days.length);
     if (days.length < 42) {
       if (days.length === 0) {
         const genDaysBefore = this.generateDays(interval.from, interval.to);
@@ -390,9 +388,10 @@ export class PlanningService {
       } else {
         // sort days by date
         this.sortDays(days);
-
         const firstDate = moment(days[0].date);
         if (from.isBefore(firstDate, 'day')) {
+          console.log('from ', from.toString());
+          console.log('first ', firstDate.toString());
           const genDaysBefore = this.generateDays(from.toDate(), moment(firstDate).subtract(1, 'days').toDate());
           this.addDays(genDaysBefore);
           this.askForTasks(from.toDate(), moment(firstDate).subtract(1, 'days').endOf('day').toDate());
@@ -400,7 +399,10 @@ export class PlanningService {
 
         const lastDate = moment(days[days.length - 1].date);
         if (lastDate.isBefore(to, 'day')) {
+          console.log('to ', to.toString());
+          console.log('last ', lastDate.toString());
           const genDaysBefore = this.generateDays(moment(lastDate).add(1, 'days').toDate(), to.toDate());
+          console.log(genDaysBefore.length);
           this.addDays(genDaysBefore);
           this.askForTasks(moment(lastDate).add(1, 'days').startOf('day').toDate(),  to.toDate());
         }
@@ -408,6 +410,7 @@ export class PlanningService {
       }
 
       days = this._days.filter((day) => moment(day.date).isBetween(from, to, 'day', '[]'));
+      console.log('days after modifying ', days.length);
     }
 
     return days;
@@ -433,9 +436,10 @@ export class PlanningService {
       const days = this._days.filter((day) => moment(day.date).isBetween(momentFrom, momentTo, 'day', '[]'));
       days.forEach((day) => {
         day.tasks = tasks.filter((t) => moment(day.date).isSame(moment(t.begin, 'day')));
-        // TODO what to do with deadlines
       });
     });
+
+    // TODO ask here for deadlines and map them
   }
 
   private sortDays(list: PlanningDay[]): void {
@@ -447,7 +451,9 @@ export class PlanningService {
   }
 
   private addDays(list: PlanningDay[]): void {
+    console.log('days length before', this._days.length);
     this._days.push(...list);
+    console.log('days length after', this._days.length);
     this.sortDays(this._days);
   }
 

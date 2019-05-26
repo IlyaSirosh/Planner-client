@@ -24,13 +24,14 @@ import { ColorPickerComponent } from './forms/color-picker/color-picker.componen
 
 
 const routes: Routes = [
-  { path: '', component: PlanningComponent,
+  { path: 'planning',
+    component: PlanningComponent,
     children: [
       { path: '', redirectTo: 'current/month', pathMatch: 'full'},
       { path: 'current/month', component: MonthComponent },
       { path: 'current/day', component: DayComponent},
       { path: ':year/:month/:day', component: DayComponent },
-      { path: ':year/:month', component: MonthComponent },
+      { path: ':year/:month', component: MonthComponent }
     ]}
 ];
 

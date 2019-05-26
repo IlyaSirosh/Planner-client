@@ -45,6 +45,7 @@ export class TaskService {
 
   update(task: Task): Observable<any> {
     const body = this.mapToBackFormat(task);
+    console.log(task);
     return this.http.patch(`${this.URL}/task/${task.id}`, body).pipe( tap(data => console.log('update', task), error => console.error(error)));
   }
 

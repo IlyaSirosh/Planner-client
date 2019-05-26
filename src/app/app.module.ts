@@ -7,6 +7,7 @@ import {RouterModule} from '@angular/router';
 import {routes} from './app.routes';
 import {CoreModule} from './core/core.module';
 import {HttpClientModule} from '@angular/common/http';
+import {PlanningModule} from './planning/planning.module';
 
 
 
@@ -19,7 +20,8 @@ import {HttpClientModule} from '@angular/common/http';
     CommonModule,
     RouterModule.forRoot(routes),
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    PlanningModule
   ],
   providers: [],
   bootstrap: [AppComponent]
