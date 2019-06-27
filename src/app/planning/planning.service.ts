@@ -35,14 +35,14 @@ export class PlanningService {
 
     this.taskService.getWaitingTasks().subscribe( (tasks: Task[]) => {
       if (tasks) {
-        const a: Task[] = this._waiting.value.concat(tasks) as Task[];
+        const a: Task[] = [...tasks, ...this._waiting.getValue()] as Task[];
         this._waiting.next(a);
       }
     });
 
     this.projectService.getProjects().subscribe((projects: Project[]) => {
       if (projects) {
-        const a: Project[] = this._projects.value.concat(projects) as Project[];
+        const a: Project[] = [ ...projects, ...this._projects.getValue()] as Project[];
         this._projects.next(a);
         console.log(projects);
       }
@@ -50,7 +50,7 @@ export class PlanningService {
 
     this.taskService.getArchive().subscribe( (tasks: Task[]) => {
       if (tasks) {
-        const a: Task[] = this._archive.value.concat(tasks) as Task[];
+        const a: Task[] = [...tasks, ...this._archive.getValue()] as Task[];
         this._archive.next(a);
       }
     });
@@ -270,7 +270,7 @@ export class PlanningService {
   private _addProject(project: Project): void {
     const arr = [...this._projects.value];
     arr.unshift(project);
-    this._projects.next([...arr]);
+    this._projects.next(arr);
   }
 
   updateProject(project: Project): void {
