@@ -63,7 +63,7 @@ export class PlanningService {
         if (list === TaskList.WAITING) {
           this._addTaskToWaiting(t);
         } else {
-          this._addTaskToDay(t, event);
+          this._addTaskToDay(t);
         }
       })
       .catch(() => {});
@@ -85,7 +85,8 @@ export class PlanningService {
     }
   }
 
-  private _addTaskToDay(task: Task, event): void {
+  // TODO add task to
+  private _addTaskToDay(task: Task): void {
    const index = this._days.findIndex(d => moment(d.date).isSame(moment(task.begin), 'day'));
 
    if (index !== -1) {

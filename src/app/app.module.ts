@@ -18,7 +18,7 @@ import {PlanningModule} from './planning/planning.module';
   imports: [
     CoreModule,
     CommonModule,
-    RouterModule.forRoot(routes,{ useHash: true }),
+    RouterModule.forRoot(routes),
     BrowserModule,
     HttpClientModule,
     PlanningModule
