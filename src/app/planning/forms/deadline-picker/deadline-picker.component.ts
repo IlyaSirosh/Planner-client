@@ -86,12 +86,12 @@ export class DeadlinePickerComponent implements OnInit, ControlValueAccessor, On
   }
 
   prevMonth(): void {
-    const next = this.planningService.getPrevMonth(this.month.date);
+    const next = this.planningService.getPrevMonthDate(this.month.date);
     this.month = this.planningService.getMonth(next);
   }
 
   nextMonth(): void {
-    const next = this.planningService.getNextMonth(this.month.date);
+    const next = this.planningService.getNextMonthDate(this.month.date);
     this.month = this.planningService.getMonth(next);
   }
 

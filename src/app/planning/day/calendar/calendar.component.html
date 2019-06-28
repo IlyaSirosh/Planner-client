@@ -11,9 +11,9 @@
         >
       </button>
     </div>
-    <!--<button class="today-button" (click)="onTodaySelected()" *ngIf="currentDay && isNotCurrentMonth(currentDay)">-->
-      <!--today-->
-    <!--</button>-->
+    <button class="today-button" (click)="onTodaySelected()" *ngIf="isNotCurrentMonth()">
+      today
+    </button>
   </div>
   <div class="day-week-labels">
     <div class="day-week-label" *ngFor="let wd of weekDays">
@@ -26,7 +26,7 @@
     <button class="month-day" (click)="onDaySelected(d)"
             *ngFor="let d of dayOfWeek.daysOfMonth"
             [class.weekend]="isWeekend(d.date)"
-            [class.anotherMonth]="isNotCurrentMonth(d.date)"
+            [class.anotherMonth]="isAnotherMonth(d.date)"
             [class.selectedDay]="isSelectedDay(d.date)">
       <div class="day-number" >
         <span *ngIf="d.date.getDate() === 1">

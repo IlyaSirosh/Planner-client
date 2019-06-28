@@ -1,11 +1,10 @@
 import {AfterViewInit, Component, ElementRef, OnInit, QueryList, Renderer2, ViewChild, ViewChildren} from '@angular/core';
-import {Task} from '../domain/task';
-import {DayTimeRangeComponent} from './day-time-range/day-time-range.component';
-import {DayTaskComponent} from '../day-task/day-task.component';
 import {PlanningDay} from '../domain/planning-day';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PlanningService} from '../planning.service';
+import {map, mergeMap, switchMap, tap} from 'rxjs/internal/operators';
 import {PlanningMonth} from '../domain/planning-month';
+import {forkJoin, ReplaySubject} from 'rxjs';
 
 
 @Component({
@@ -15,28 +14,39 @@ import {PlanningMonth} from '../domain/planning-month';
 })
 export class DayComponent implements OnInit, AfterViewInit {
 
+  private _monthDate = new ReplaySubject(1);
+  public $monthDate = this._monthDate.asObservable()
+    .pipe( switchMap(date => this.planningService.getMonth(date)) );
+
   day: PlanningDay;
   month: PlanningMonth;
   constructor(private renderer: Renderer2, private elem: ElementRef,
-              private router: Router, private route: ActivatedRoute, private planningService: PlanningService) {
-    this.month = this.planningService.getCurrentMonth();
-    this.day = this.planningService.getCurrentDay();
+              private router: Router, private route: ActivatedRoute,
+              private planningService: PlanningService) {
   }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      if (+params.year && +params.month && +params.day) {
-        const date = new Date( +params.year, (+params.month) - 1, +params.day);
-        const oldDate = this.day.date;
-        this.day = this.planningService.getDay(date);
+    this.route.params
+      .pipe(
+      map(params => {
+              let result = null;
 
-        if (date.getMonth() !== oldDate.getMonth() || date.getFullYear() !== oldDate.getFullYear()) {
-          this.month = this.planningService.getMonth(date);
-        }
-      } else {
-        this.day = this.planningService.getCurrentDay();
-        this.month = this.planningService.getCurrentMonth();
-      }
+              if (+params.year && +params.month && +params.day) {
+                result = new Date( +params.year, (+params.month) - 1, +params.day);
+              } else {
+                result = this.planningService.getCurrentDate();
+              }
+
+              return result;
+            }),
+        tap(date => this._monthDate.next(date)),
+        switchMap(date => this.planningService.getDay(date)),
+    ).subscribe((day) => {
+      this.day = day;
+    });
+
+    this.$monthDate.subscribe(month => {
+      this.month = month;
     });
   }
 
@@ -49,13 +59,13 @@ export class DayComponent implements OnInit, AfterViewInit {
   }
 
   prevMonth(): void {
-    const next = this.planningService.getPrevMonth(this.month.date);
-    this.month = this.planningService.getMonth(next);
+    const prev = this.planningService.getPrevMonthDate(this.month.date);
+    this._monthDate.next(prev);
   }
 
   nextMonth(): void {
-    const next = this.planningService.getNextMonth(this.month.date);
-    this.month = this.planningService.getMonth(next);
+    const next = this.planningService.getNextMonthDate(this.month.date);
+    this._monthDate.next(next);
   }
 
   selectedDay(date: Date): void {
@@ -63,16 +73,19 @@ export class DayComponent implements OnInit, AfterViewInit {
   }
 
   onCurrentMonth(): void {
-    this.month = this.planningService.getCurrentMonth();
+    const current = this.planningService.getCurrentMonthDate();
+    const today = this.planningService.getCurrentDate();
+    this.selectedDay(today);
+    this._monthDate.next(current);
   }
 
   prevDay(): void {
-    const nextDate = this.planningService.getPrevDay(this.day.date);
+    const nextDate = this.planningService.getPrevDayDate(this.day.date);
     this.selectedDay(nextDate);
   }
 
   nextDay(): void {
-    const nextDate = this.planningService.getNextDay(this.day.date);
+    const nextDate = this.planningService.getNextDayDate(this.day.date);
     this.selectedDay(nextDate);
   }
 }

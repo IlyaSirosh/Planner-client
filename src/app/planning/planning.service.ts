@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Task, TaskList} from './domain/task';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {PlanningMonth} from './domain/planning-month';
 import {TaskService} from './task.service';
 import * as Moment from 'moment';
@@ -10,6 +10,7 @@ import {PlanningDay} from './domain/planning-day';
 import {Project} from './domain/project';
 import {ProjectService} from './project.service';
 import {DayTimeRangeComponent} from './day/day-time-range/day-time-range.component';
+import {filter, map, tap} from 'rxjs/internal/operators';
 
 
 @Injectable({
@@ -28,8 +29,10 @@ export class PlanningService {
   private _archive = new BehaviorSubject<Task[]>([]);
   public readonly $archive = this._archive.asObservable();
 
+  private _plannedTasks = new BehaviorSubject<Task[]>([]);
+  private $plannedTasks = this._plannedTasks.asObservable<Task[]>();
 
-  private _days: PlanningDay[] = [];
+  private loadedDays: Set<Date> = new Set<Date>();
 
   constructor(private taskService: TaskService, private projectService: ProjectService) {
 
@@ -298,60 +301,95 @@ export class PlanningService {
     }
   }
 
-  getCurrentMonth(): PlanningMonth {
-    const date =  new Date(Date.now());
-    return this.getMonth(date);
+  getCurrentMonthDate(): Date {
+    return moment(new Date(Date.now())).startOf('month').toDate();
   }
 
-  getMonth(date: Date): PlanningMonth {
-    return this.mapMonth(date);
+  getCurrentDate(): Date {
+    return new Date(Date.now());
   }
 
-  getNextMonth(date: Date): Date {
+  getMonth(date: Date): Observable<PlanningMonth> {
+
+    const month = new PlanningMonth();
+    month.date = moment(date).startOf('month').toDate();
+    const {from, to} = this.findMonth(date);
+    month.days = this.generateDays(from, to);
+    // let allDaysLoaded = true;
+    // month.days.map(d => d.date).forEach(x => {
+    //   allDaysLoaded = allDaysLoaded && this.loadedDays.has(x);
+    // });
+    // if (!allDaysLoaded) {
+    this.askForTasks(from, to);
+    // }
+    return this.$plannedTasks.pipe(
+      map((tasks: Task[] ) => tasks.filter( t => moment(t).isBetween(from, to, 'day', '[]'))),
+      map((tasks: Task[]) => {
+             month.days = this.tasksMapToDays(tasks, month.days);
+             return month;
+           })
+    );
+  }
+
+  private tasksMapToDays(tasks: Task[], days: PlanningDay[]): PlanningDay[] {
+    const result = [...days];
+
+    result.forEach((day: PlanningDay) => {
+      day.tasks = tasks.filter((task: Task) => moment(task.begin).isSame(moment(day.date), 'day') );
+    });
+
+    return result;
+  }
+
+  getNextMonthDate(date: Date): Date {
     return moment(date).add(1, 'months').toDate();
   }
 
-  getPrevMonth(date: Date): Date {
+  getPrevMonthDate(date: Date): Date {
     return moment(date).subtract(1, 'months').toDate();
   }
 
 
-  // TODO make return Promise<PlanningDay>
-  getDay(date: Date): PlanningDay {
-    const day = this._days.find( d => moment(date).isSame(moment(d.date), 'day') );
-
-    return day ? day : this.askForDay(date);
+  getDay(date: Date): Observable<PlanningDay> {
+    const day = new PlanningDay();
+    day.date = date;
+    return this.$plannedTasks.pipe(
+      map( (tasks: Task[]) => {
+            day.tasks = tasks.filter(task => moment(task.begin).isSame(moment(day.date), 'day'));
+            return day;
+          })
+    );
   }
 
-  getCurrentDay(): PlanningDay {
+  getCurrentDay(): Observable<PlanningDay> {
     const date =  new Date(Date.now());
     return this.getDay(date);
   }
 
-  getNextDay(date: Date): Date {
+  getNextDayDate(date: Date): Date {
     return moment(date).add(1, 'days').toDate();
   }
 
-  getPrevDay(date: Date): Date {
+  getPrevDayDate(date: Date): Date {
     return moment(date).subtract(1, 'days').toDate();
   }
 
 
-  private askForDay(date: Date): PlanningDay {
-    // TODO ask server for tasks on specific day
-    const month = this.mapMonth(date);
-    const day = month.days.find( d => moment(date).isSame(moment(d.date), 'day') );
-    console.log(day);
-    return day;
-  }
+  // private askForDay(date: Date): PlanningDay {
+  //   // TODO ask server for tasks on specific day
+  //   const month = this.mapMonth(date);
+  //   const day = month.days.find( d => moment(date).isSame(moment(d.date), 'day') );
+  //   console.log(day);
+  //   return day;
+  // }
 
-  private mapMonth(date: Date): PlanningMonth {
-    const month = new PlanningMonth();
-    month.date = moment(date).startOf('month').toDate();
-    const monthDuration = this.findMonth(date);
-    month.days  = this.getDays(monthDuration);
-    return month;
-  }
+  // private mapMonth(date: Date): PlanningMonth {
+  //   const month = new PlanningMonth();
+  //   month.date = moment(date).startOf('month').toDate();
+  //   const monthDuration = this.findMonth(date);
+  //   month.days  = this.getDays(monthDuration);
+  //   return month;
+  // }
 
 
   private findMonth(date: Date): {from: Date, to: Date} {
@@ -374,54 +412,54 @@ export class PlanningService {
     return {from: begin.toDate(), to: end.toDate()};
   }
 
-  private getDays(interval: {from: Date, to: Date}): PlanningDay[] {
-    const from = moment(interval.from);
-    const to = moment(interval.to);
-    let days = this._days.filter((day) => moment(day.date).isBetween(from, to, 'day', '[]'));
-    console.log('days before ', days.length);
-    if (days.length < 42) {
-      if (days.length === 0) {
-        const genDaysBefore = this.generateDays(interval.from, interval.to);
-        this._days.unshift(...genDaysBefore);
-        this.sortDays(this._days);
-        this.askForTasks(from.toDate(), to.toDate());
-
-      } else {
-        // sort days by date
-        this.sortDays(days);
-        const firstDate = moment(days[0].date);
-        if (from.isBefore(firstDate, 'day')) {
-          console.log('from ', from.toString());
-          console.log('first ', firstDate.toString());
-          const genDaysBefore = this.generateDays(from.toDate(), moment(firstDate).subtract(1, 'days').toDate());
-          this.addDays(genDaysBefore);
-          this.askForTasks(from.toDate(), moment(firstDate).subtract(1, 'days').endOf('day').toDate());
-        }
-
-        const lastDate = moment(days[days.length - 1].date);
-        if (lastDate.isBefore(to, 'day')) {
-          console.log('to ', to.toString());
-          console.log('last ', lastDate.toString());
-          const genDaysBefore = this.generateDays(moment(lastDate).add(1, 'days').toDate(), to.toDate());
-          console.log(genDaysBefore.length);
-          this.addDays(genDaysBefore);
-          this.askForTasks(moment(lastDate).add(1, 'days').startOf('day').toDate(),  to.toDate());
-        }
-
-      }
-
-      days = this._days.filter((day) => moment(day.date).isBetween(from, to, 'day', '[]'));
-      console.log('days after modifying ', days.length);
-    }
-
-    return days;
-  }
+  // private getDays(interval: {from: Date, to: Date}): PlanningDay[] {
+  //   const from = moment(interval.from);
+  //   const to = moment(interval.to);
+  //   let days = this._days.filter((day) => moment(day.date).isBetween(from, to, 'day', '[]'));
+  //   console.log('days before ', days.length);
+  //   if (days.length < 42) {
+  //     if (days.length === 0) {
+  //       const genDaysBefore = this.generateDays(interval.from, interval.to);
+  //       this._days.unshift(...genDaysBefore);
+  //       this.sortDays(this._days);
+  //       this.askForTasks(from.toDate(), to.toDate());
+  //
+  //     } else {
+  //       // sort days by date
+  //       this.sortDays(days);
+  //       const firstDate = moment(days[0].date);
+  //       if (from.isBefore(firstDate, 'day')) {
+  //         console.log('from ', from.toString());
+  //         console.log('first ', firstDate.toString());
+  //         const genDaysBefore = this.generateDays(from.toDate(), moment(firstDate).subtract(1, 'days').toDate());
+  //         this.addDays(genDaysBefore);
+  //         this.askForTasks(from.toDate(), moment(firstDate).subtract(1, 'days').endOf('day').toDate());
+  //       }
+  //
+  //       const lastDate = moment(days[days.length - 1].date);
+  //       if (lastDate.isBefore(to, 'day')) {
+  //         console.log('to ', to.toString());
+  //         console.log('last ', lastDate.toString());
+  //         const genDaysBefore = this.generateDays(moment(lastDate).add(1, 'days').toDate(), to.toDate());
+  //         console.log(genDaysBefore.length);
+  //         this.addDays(genDaysBefore);
+  //         this.askForTasks(moment(lastDate).add(1, 'days').startOf('day').toDate(),  to.toDate());
+  //       }
+  //
+  //     }
+  //
+  //     days = this._days.filter((day) => moment(day.date).isBetween(from, to, 'day', '[]'));
+  //     console.log('days after modifying ', days.length);
+  //   }
+  //
+  //   return days;
+  // }
 
   private generateDays(from: Date, to: Date): PlanningDay[] {
 
     return Array.from(moment.range(from, to).by('days')).map(date => {
       const day = new PlanningDay();
-      day.date = date.toDate();
+      day.date = date.startOf('day').toDate();
       day.tasks = [];
       day.deadlines = [];
       return day;
@@ -431,14 +469,21 @@ export class PlanningService {
 
 
   private askForTasks(from: Date, to: Date): void {
-    const momentFrom = moment(from);
-    const momentTo = moment(to);
-    this.taskService.getTasks(from.getTime(), to.getTime()).subscribe((tasks: Task[]) => {
-      const days = this._days.filter((day) => moment(day.date).isBetween(momentFrom, momentTo, 'day', '[]'));
-      days.forEach((day) => {
-        day.tasks = tasks.filter((t) => moment(day.date).isSame(moment(t.begin, 'day')));
-      });
+    this.taskService.getTasks(from.getTime(), to.getTime())
+      .pipe(tap(tasks => {
+        console.log(`load tasks from:${from} to:${to} loaded:${tasks.length}`);
+      }))
+      .subscribe((tasks: Task[]) => {
+      // Array.from(moment.range(from, to).by('days')).map(date => date.startOf('day').toDate())
+      //   .forEach(x => {
+      //     if (!this.loadedDays.has(x)) {
+      //       this.loadedDays.add(x);
+      //     }
+      //   });
+      // console.log(this.loadedDays);
+      this.addTasks(tasks);
     });
+
 
     // TODO ask here for deadlines and map them
   }
@@ -451,11 +496,17 @@ export class PlanningService {
     } );
   }
 
-  private addDays(list: PlanningDay[]): void {
-    console.log('days length before', this._days.length);
-    this._days.push(...list);
-    console.log('days length after', this._days.length);
-    this.sortDays(this._days);
+  private addTasks(tasks: Task[]): void {
+    const arr: Task[] = [...tasks, ...this._plannedTasks.getValue()];
+    const result = [];
+    const m = new Map();
+    for (const x of arr) {
+      if (!m.has(x.id)) {
+        m.set(x.id, true);
+        result.push(x);
+      }
+    }
+    this._plannedTasks.next(result);
   }
 
 }
