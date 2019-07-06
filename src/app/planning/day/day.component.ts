@@ -14,9 +14,8 @@ import {forkJoin, ReplaySubject} from 'rxjs';
 })
 export class DayComponent implements OnInit, AfterViewInit {
 
-  private _monthDate = new ReplaySubject(1);
-  public $monthDate = this._monthDate.asObservable()
-    .pipe( switchMap(date => this.planningService.getMonth(date)) );
+  private monthDate = new ReplaySubject(1);
+  public $monthDate = this.monthDate.asObservable();
 
   day: PlanningDay;
   month: PlanningMonth;
@@ -39,15 +38,19 @@ export class DayComponent implements OnInit, AfterViewInit {
 
               return result;
             }),
-        tap(date => this._monthDate.next(date)),
-        switchMap(date => this.planningService.getDay(date)),
+        tap((date: Date) => this.monthDate.next(date)),
+        switchMap((date: Date) => this.planningService.getDay(date)),
     ).subscribe((day) => {
       this.day = day;
     });
 
-    this.$monthDate.subscribe(month => {
-      this.month = month;
-    });
+    this.$monthDate
+      .pipe(
+        switchMap((date: Date) => this.planningService.getMonth(date)
+        ) )
+      .subscribe((month: PlanningMonth) => {
+        this.month = month;
+      });
   }
 
   ngAfterViewInit() {
@@ -60,12 +63,12 @@ export class DayComponent implements OnInit, AfterViewInit {
 
   prevMonth(): void {
     const prev = this.planningService.getPrevMonthDate(this.month.date);
-    this._monthDate.next(prev);
+    this.monthDate.next(prev);
   }
 
   nextMonth(): void {
     const next = this.planningService.getNextMonthDate(this.month.date);
-    this._monthDate.next(next);
+    this.monthDate.next(next);
   }
 
   selectedDay(date: Date): void {
@@ -76,7 +79,7 @@ export class DayComponent implements OnInit, AfterViewInit {
     const current = this.planningService.getCurrentMonthDate();
     const today = this.planningService.getCurrentDate();
     this.selectedDay(today);
-    this._monthDate.next(current);
+    this.monthDate.next(current);
   }
 
   prevDay(): void {

@@ -4,6 +4,8 @@ import {PlanningMonth} from '../../domain/planning-month';
 import {PlanningDay} from '../../domain/planning-day';
 import {PlanningService} from '../../planning.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {map, switchMap, take, tap} from 'rxjs/internal/operators';
+import {ReplaySubject} from 'rxjs';
 
 @Component({
   selector: 'app-deadline-picker',
@@ -19,8 +21,10 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 export class DeadlinePickerComponent implements OnInit, ControlValueAccessor, OnDestroy {
 
+  private currentMonthDate = new ReplaySubject(1);
+  private $currentMonthDate = this.currentMonthDate.asObservable();
+
   constructor(private planningService: PlanningService, private route: ActivatedRoute) {
-    this.month = this.planningService.getCurrentMonth();
   }
 
 
@@ -34,23 +38,35 @@ export class DeadlinePickerComponent implements OnInit, ControlValueAccessor, On
   onTouchedFn = () => {};
 
   ngOnInit() {
-    let currentDay;
 
-    this.sub = this.route.params.subscribe( params => {
-      // TODO change for real access to params
-      if (params === {}) {
-        currentDay = new Date(Date.now());
-      } else {
-        if (+params.year && +params.month && +params.day) {
-          currentDay = new Date(+params.year, (+params.month) - 1,  +params.day);
-        } else if (+params.year && +params.month) {
-          currentDay = new Date(+params.year, (+params.month) - 1,  1);
+    this.$currentMonthDate
+      .pipe(
+        tap(console.log),
+        switchMap((date: Date) => this.planningService.getMonth(new Date(date)))
+      )
+      .subscribe((month: PlanningMonth) => this.month = month);
+
+    this.sub = this.route.params.pipe(
+      take(1),
+      map( params => {
+        // TODO get real date 'cause this code does not work
+        let date = new Date(Date.now());
+        if (params === {}) {
+          date = new Date(Date.now());
         } else {
-          currentDay = new Date(Date.now());
+          if (+params.year && +params.month && +params.day) {
+            date = new Date(+params.year, (+params.month) - 1,  +params.day);
+          } else if (+params.year && +params.month) {
+            date = new Date(+params.year, (+params.month) - 1,  1);
+          } else {
+            date = new Date(Date.now());
+          }
         }
-      }
 
-      this.month = this.planningService.getMonth(currentDay);
+        return date;
+      }),
+    ).subscribe( (date: Date) => {
+      this.currentMonthDate.next(date);
     });
   }
 
@@ -60,7 +76,7 @@ export class DeadlinePickerComponent implements OnInit, ControlValueAccessor, On
     }
   }
 
-  writeValue(obj: any): void {
+  writeValue(obj: Date): void {
     this.deadline = obj;
     if (obj) {
       this.new = false;
@@ -87,12 +103,12 @@ export class DeadlinePickerComponent implements OnInit, ControlValueAccessor, On
 
   prevMonth(): void {
     const next = this.planningService.getPrevMonthDate(this.month.date);
-    this.month = this.planningService.getMonth(next);
+    this.currentMonthDate.next(next);
   }
 
   nextMonth(): void {
     const next = this.planningService.getNextMonthDate(this.month.date);
-    this.month = this.planningService.getMonth(next);
+    this.currentMonthDate.next(next);
   }
 
   enable(): void {
@@ -101,7 +117,7 @@ export class DeadlinePickerComponent implements OnInit, ControlValueAccessor, On
   }
 
   edit(): void {
-    this.month = this.planningService.getMonth(this.deadline);
+    this.currentMonthDate.next(this.deadline);
     this.showCalendar = true;
   }
 
