@@ -1,7 +1,6 @@
-import {Component, forwardRef, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
+import {Component, forwardRef, OnDestroy, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {PlanningMonth} from '../../domain/planning-month';
-import {PlanningDay} from '../../domain/planning-day';
 import {PlanningService} from '../../planning.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {map, switchMap, take, tap} from 'rxjs/internal/operators';
@@ -50,20 +49,21 @@ export class DeadlinePickerComponent implements OnInit, ControlValueAccessor, On
       take(1),
       map( params => {
         // TODO get real date 'cause this code does not work
-        let date = new Date(Date.now());
-        if (params === {}) {
-          date = new Date(Date.now());
-        } else {
-          if (+params.year && +params.month && +params.day) {
-            date = new Date(+params.year, (+params.month) - 1,  +params.day);
-          } else if (+params.year && +params.month) {
-            date = new Date(+params.year, (+params.month) - 1,  1);
-          } else {
-            date = new Date(Date.now());
-          }
-        }
-
-        return date;
+        // let date = new Date(Date.now());
+        // if (params === {}) {
+        //   date = new Date(Date.now());
+        // } else {
+        //   if (+params.year && +params.month && +params.day) {
+        //     date = new Date(+params.year, (+params.month) - 1,  +params.day);
+        //   } else if (+params.year && +params.month) {
+        //     date = new Date(+params.year, (+params.month) - 1,  1);
+        //   } else {
+        //     date = new Date(Date.now());
+        //   }
+        // }
+        //
+        // return date;
+        return this.planningService.getCurrentMonthDate();
       }),
     ).subscribe( (date: Date) => {
       this.currentMonthDate.next(date);
