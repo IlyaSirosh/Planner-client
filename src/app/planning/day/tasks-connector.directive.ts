@@ -21,22 +21,28 @@ export class TasksConnectorDirective implements AfterContentInit, OnInit , OnDes
   svg: HTMLElement;
   connectors: object[] = [];
   private _nodes: TaskNode[] = [];
-  constructor(private elem: ElementRef, private renderer: Renderer2, private planningService: PlanningService) { }
+  constructor(private elem: ElementRef, private renderer: Renderer2, private planningService: PlanningService) {
+    document.addEventListener('fullscreenchange', this.render.bind( this));
+
+    /* Firefox */
+    document.addEventListener('mozfullscreenchange', this.render.bind( this));
+
+    /* Chrome, Safari and Opera */
+    document.addEventListener('webkitfullscreenchange', this.render.bind( this));
+
+    /* IE / Edge */
+    document.addEventListener('msfullscreenchange',  this.render.bind( this));
+
+    // this.renderer.listen(this.elem.nativeElement, 'onresize', this.render.bind(this));
+  }
 
   @HostListener('window:resize')
   onWindowResize(): void {
     this.render();
   }
 
-  @HostListener('scroll')
-  onScroll(): void {
-    this.render();
-  }
 
   ngOnInit() {
-    // if (this.scrollable) {
-    //   this.scrollable.addEventListener( 'scroll', this.render);
-    // }
   }
 
   ngOnDestroy() {
