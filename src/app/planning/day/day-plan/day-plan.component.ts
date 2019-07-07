@@ -1,8 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {Task, TaskList} from '../../domain/task';
 import {PlanningDay} from '../../domain/planning-day';
 import {PlanningService} from '../../planning.service';
 import {FormsService} from '../../forms/forms.service';
+import {of} from 'rxjs';
+import {skipUntil, switchMap} from 'rxjs/internal/operators';
 
 
 @Component({
@@ -10,16 +12,29 @@ import {FormsService} from '../../forms/forms.service';
   templateUrl: './day-plan.component.html',
   styleUrls: ['./day-plan.component.css']
 })
-export class DayPlanComponent implements OnInit {
+export class DayPlanComponent implements OnInit, OnChanges {
 
-  @Input() day: PlanningDay;
+  @Input() date: Date;
   @Output() updateTasks = new EventEmitter<Task[]>();
   @Output() addTask = new EventEmitter<Task>();
   @Output() prevDay = new EventEmitter<any>();
   @Output() nextDay = new EventEmitter<any>();
+
+  day: PlanningDay;
+
   constructor(private planningService: PlanningService, private formService: FormsService) { }
 
   ngOnInit() {
+  }
+
+  ngOnChanges() {
+    of(this.date)
+      .pipe(
+        switchMap((date: Date) => this.planningService.getDay(date))
+      )
+      .subscribe((day: PlanningDay) => {
+        this.day = day;
+      });
   }
 
   onPrevDay(): void {
@@ -46,7 +61,7 @@ export class DayPlanComponent implements OnInit {
 
   drop(event): void {
     console.log(event);
-    const task = event.item.data as Task;
+    const task = {...event.item.data} as Task;
     task.begin = this.day.date;
     task.begin.setHours(12, 30);
     this.planningService.moveTask(task, TaskList[event.previousContainer.id as string], TaskList[event.container.id as string], event);

@@ -94,7 +94,8 @@
   right: 0;
   bottom: 0;
   padding-top: 10px;
-  overflow-y: scroll;
+  overflow: hidden;
+  overflow-y: auto;
 }
 
 .task-item{

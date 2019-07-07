@@ -33,6 +33,7 @@
   cursor: pointer;
   border: thin transparent solid;
   transition: transform 200ms ease-out;
+  width: 130px;
 }
 
 .month-name:focus{

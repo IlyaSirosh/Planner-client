@@ -1,6 +1,6 @@
 <div class="widgets">
   <app-calendar class="month-calendar" [month]="month"
-                [currentDay]="day.date" (prevMonth)="prevMonth()"
+                [currentDay]="dayDate" (prevMonth)="prevMonth()"
                 (nextMonth)="nextMonth()" (daySelected)="selectedDay($event)" (today)="onCurrentMonth()"
                 (monthView)="goMonthView($event)"></app-calendar>
   <!--<div class="upcoming-deadlines">-->
@@ -8,6 +8,6 @@
   <!--</div>-->
 </div>
 <div class="day-plan">
-  <app-day-plan [day]="day" (prevDay)="prevDay()" (nextDay)="nextDay()"></app-day-plan>
+  <app-day-plan [date]="dayDate" (prevDay)="prevDay()" (nextDay)="nextDay()"></app-day-plan>
 </div>
 

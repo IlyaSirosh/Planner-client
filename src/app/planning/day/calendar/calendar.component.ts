@@ -68,7 +68,13 @@ export class CalendarComponent implements OnInit, OnChanges {
     return today.getDate() === date.getDate() && today.getMonth() === date.getMonth() && today.getFullYear() === date.getFullYear();
   }
 
-  isNotCurrentMonth(date: Date): boolean {
+  isNotCurrentMonth(): boolean {
+    const current = this.month.date;
+    const today = new Date(Date.now());
+    return !(current.getMonth() === today.getMonth() && current.getFullYear() === today.getFullYear());
+  }
+
+  isAnotherMonth(date: Date): boolean {
     const current = this.month.date;
     return !(current.getMonth() === date.getMonth() && current.getFullYear() === date.getFullYear());
   }

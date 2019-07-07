@@ -4,9 +4,11 @@ import {
 } from '@angular/core';
 import {DayTimeRangeComponent, TaskNode} from './day-time-range/day-time-range.component';
 import {DayTaskComponent} from '../day-task/day-task.component';
-import {skipUntil} from 'rxjs/internal/operators';
+import {distinctUntilKeyChanged, shareReplay, skipUntil, skipWhile, switchMap, tap} from 'rxjs/internal/operators';
 import {TaskScrollableDirective} from './task-scrollable.directive';
 import {PlanningService} from '../planning.service';
+import {combineLatest, of} from 'rxjs';
+import {TaskComponent} from '../task-list/task/task.component';
 
 @Directive({
   selector: '[tasksConnector]'
@@ -15,26 +17,32 @@ export class TasksConnectorDirective implements AfterContentInit, OnInit , OnDes
   @Input() scrollable: HTMLElement;
   // @ContentChild(TaskScrollableDirective) scrollable: TaskScrollableDirective;
   @ContentChild(DayTimeRangeComponent) timeRange: DayTimeRangeComponent;
-  @ContentChildren(DayTaskComponent) tasks: QueryList<DayTaskComponent>;
+  @ContentChildren(DayTaskComponent, {descendants: true}) tasks: QueryList<DayTaskComponent>;
   svg: HTMLElement;
   connectors: object[] = [];
   private _nodes: TaskNode[] = [];
-  constructor(private elem: ElementRef, private renderer: Renderer2, private planningService: PlanningService) { }
+  constructor(private elem: ElementRef, private renderer: Renderer2, private planningService: PlanningService) {
+    document.addEventListener('fullscreenchange', this.render.bind( this));
 
-  @HostListener('window:resize')
+    /* Firefox */
+    document.addEventListener('mozfullscreenchange', this.render.bind( this));
+
+    /* Chrome, Safari and Opera */
+    document.addEventListener('webkitfullscreenchange', this.render.bind( this));
+
+    /* IE / Edge */
+    document.addEventListener('msfullscreenchange',  this.render.bind( this));
+
+    // this.renderer.listen(this.elem.nativeElement, 'onresize', this.render.bind(this));
+  }
+
+  @HostListener('resize')
   onWindowResize(): void {
     this.render();
   }
 
-  @HostListener('scroll')
-  onScroll(): void {
-    this.render();
-  }
 
   ngOnInit() {
-    // if (this.scrollable) {
-    //   this.scrollable.addEventListener( 'scroll', this.render);
-    // }
   }
 
   ngOnDestroy() {
@@ -53,15 +61,22 @@ export class TasksConnectorDirective implements AfterContentInit, OnInit , OnDes
   ngAfterContentInit() {
     this.createSVG();
     this.planningService.timeRange = this.timeRange;
+    console.log(`tasks size ${this.tasks.length}`);
 
-    this.timeRange.$taskNodes.subscribe( nodes => {
-      this.nodes = nodes ? [...nodes] : [];
-      this.timeRange.$setRefs.subscribe( set => {
-        if (set) {
-          this.render();
-        }
+    combineLatest(
+      this.timeRange.$taskNodes
+        .pipe(
+          tap((x) => console.log(x)),
+          tap(nodes => this.nodes = nodes ? [...nodes] : []),
+          switchMap(() => this.timeRange.$refs)
+        ),
+      this.tasks.changes
+        .pipe(
+          tap((x) => console.log(x))
+        )
+    ).subscribe( () => {
+        this.render();
       });
-    });
 
     if (this.scrollable) {
       this.scrollable.addEventListener( 'scroll', this.render.bind(this));
@@ -84,13 +99,12 @@ export class TasksConnectorDirective implements AfterContentInit, OnInit , OnDes
 
   render(): void {
     console.log('render');
-
     this.renderer.setStyle(this.svg, 'width', this.elem.nativeElement.offsetWidth);
     this.renderer.setStyle(this.svg, 'height', this.elem.nativeElement.offsetHeight);
     this.removeAllConnections();
     this.nodes.forEach(node => {
       const task = this.tasks.find( item => item.task.id === node.task.id);
-      if (task) {
+      if (task && node.ref) {
         this.connect(node.ref, task.elem, node.color);
       }
     });

@@ -7,4 +7,3 @@ export class PlanningDay {
   deadlines: Task[];
 }
 
-

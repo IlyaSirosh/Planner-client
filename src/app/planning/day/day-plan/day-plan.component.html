@@ -6,7 +6,7 @@
       </button>
     </div>
     <div class="day-name">
-      {{ day.date | date: 'EEEE, d' }}
+      {{ date | date: 'EEEE, d' }}
     </div>
     <div class="next-day day-shift-button">
       <button (click)="onNextDay()">
@@ -16,12 +16,16 @@
   </div>
 </div>
 <div class="day-plan" tasksConnector [scrollable]="scroll">
-  <day-time-range class="time-line" [tasks]="day.tasks"></day-time-range>
+  <day-time-range class="time-line" [tasks]="day?.tasks"></day-time-range>
   <div class="tasks" #scroll>
     <div class="tasks-nested-container">
-      <div class="tasks-nested" cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="day.tasks" id="PLANNED">
-        <day-task *ngFor="let t of day.tasks" [task]="t" class="task-item" cdkDrag [cdkDragData]="t"
-                  (edit)="edit(t, $event)" (toArchive)="moveToArchive(task)" (toWaiting)="moveToWaitingList(task)"></day-task>
+      <div class="tasks-nested" cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="day?.tasks" id="PLANNED">
+        <day-task *ngFor="let t of day?.tasks" #task
+                  [task]="t" class="task-item"
+                  cdkDrag [cdkDragData]="t"
+                  (edit)="edit(t, $event)"
+                  (toArchive)="moveToArchive(task)"
+                  (toWaiting)="moveToWaitingList(task)"></day-task>
       </div>
     </div>
   </div>

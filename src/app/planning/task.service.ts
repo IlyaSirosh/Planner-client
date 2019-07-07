@@ -45,7 +45,11 @@ export class TaskService {
 
   update(task: Task): Observable<any> {
     const body = this.mapToBackFormat(task);
-    return this.http.patch(`${this.URL}/task/${task.id}`, body).pipe( tap(data => console.log('update', task), error => console.error(error)));
+    console.log(task);
+    return this.http.patch(`${this.URL}/task/${task.id}`, body)
+      .pipe(
+        tap(data => console.log('update', task), error => console.error(error))
+      );
   }
 
   delete(task: Task): Observable<any> {
@@ -55,8 +59,10 @@ export class TaskService {
   getTasks(from: number, to: number): Observable<any> {
     const p = new HttpParams().set('from', `${from}`).append('to', `${to}`);
     return this.http.get(`${this.URL}/task`, {params: p})
-      .pipe( tap(data => console.log('all tasks', data), error => console.error(error)),
-        map((tasks: Task[]) => tasks.map(t => this.mapFromBackFormat(t)) ));
+      .pipe(
+        tap(data => console.log('planned tasks', data), error => console.error(error)),
+        map((tasks: Task[]) => tasks.map(t => this.mapFromBackFormat(t)) )
+      );
   }
 
 

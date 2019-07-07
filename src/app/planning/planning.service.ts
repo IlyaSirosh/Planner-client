@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Task, TaskList} from './domain/task';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {PlanningMonth} from './domain/planning-month';
 import {TaskService} from './task.service';
 import * as Moment from 'moment';
@@ -10,6 +10,7 @@ import {PlanningDay} from './domain/planning-day';
 import {Project} from './domain/project';
 import {ProjectService} from './project.service';
 import {DayTimeRangeComponent} from './day/day-time-range/day-time-range.component';
+import {filter, map, tap} from 'rxjs/internal/operators';
 
 
 @Injectable({
@@ -19,39 +20,41 @@ export class PlanningService {
 
   timeRange: DayTimeRangeComponent;
 
-  private _waiting = new BehaviorSubject<Task[]>([]);
-  public readonly $waitingList = this._waiting.asObservable();
+  private waiting = new BehaviorSubject<Task[]>([]);
+  public readonly $waitingList = this.waiting.asObservable();
 
-  private _projects = new BehaviorSubject<Project[]>([]);
-  public readonly $projects = this._projects.asObservable();
+  private projects = new BehaviorSubject<Project[]>([]);
+  public readonly $projects = this.projects.asObservable();
 
-  private _archive = new BehaviorSubject<Task[]>([]);
-  public readonly $archive = this._archive.asObservable();
+  private archive = new BehaviorSubject<Task[]>([]);
+  public readonly $archive = this.archive.asObservable();
 
+  private plannedTasks = new BehaviorSubject<Task[]>([]);
+  private $plannedTasks = this.plannedTasks.asObservable();
 
-  private _days: PlanningDay[] = [];
+  private loadedDays: Set<Date> = new Set<Date>();
 
   constructor(private taskService: TaskService, private projectService: ProjectService) {
 
-    this.taskService.getWaitingTasks().subscribe( (tasks: Task[]) => {
+    this.taskService.getWaitingTasks()
+      .subscribe( (tasks: Task[]) => {
       if (tasks) {
-        const a: Task[] = this._waiting.value.concat(tasks) as Task[];
-        this._waiting.next(a);
+        const a: Task[] = [...tasks, ...this.waiting.getValue()] as Task[];
+        this.waiting.next(a);
       }
     });
 
     this.projectService.getProjects().subscribe((projects: Project[]) => {
       if (projects) {
-        const a: Project[] = this._projects.value.concat(projects) as Project[];
-        this._projects.next(a);
-        console.log(projects);
+        const a: Project[] = [ ...projects, ...this.projects.getValue()] as Project[];
+        this.projects.next(a);
       }
     });
 
     this.taskService.getArchive().subscribe( (tasks: Task[]) => {
       if (tasks) {
-        const a: Task[] = this._archive.value.concat(tasks) as Task[];
-        this._archive.next(a);
+        const a: Task[] = [...tasks, ...this.archive.getValue()] as Task[];
+        this.archive.next(a);
       }
     });
   }
@@ -63,45 +66,37 @@ export class PlanningService {
         if (list === TaskList.WAITING) {
           this._addTaskToWaiting(t);
         } else {
-          this._addTaskToDay(t, event);
+          this._addTaskToDay(t);
         }
       })
       .catch(() => {});
   }
 
   private _addTaskToWaiting(task: Task): void {
-    const arr = [...this._waiting.value];
+    const arr = [...this.waiting.value];
     arr.unshift(task);
-    this._waiting.next(arr);
+    this.waiting.next(arr);
 
-    if (task.project) {
-
-      const projects = this._projects.value;
-      const index = projects.findIndex(p => p.id === task.project.id);
-      if (index < 0) {
-        projects[index].tasks.unshift(task);
-        this._projects.next(this._projects.value);
-      }
-    }
+    // if (task.project) {
+    //
+    //   const projects = this.projects.value;
+    //   const index = projects.findIndex(p => p.id === task.project.id);
+    //   if (index < 0) {
+    //     projects[index].tasks.unshift(task);
+    //     this.projects.next(this.projects.value);
+    //   }
+    // }
   }
-
-  private _addTaskToDay(task: Task, event): void {
-   const index = this._days.findIndex(d => moment(d.date).isSame(moment(task.begin), 'day'));
-
-   if (index !== -1) {
-     this._days[index].tasks.push(task);
-   } else {
-     const d = this.getDay(task.begin);
-     d.tasks.push(task);
-   }
-
-    this.timeRange.addTask(task);
+  private _addTaskToDay(task: Task): void {
+    const arr = [...this.plannedTasks.value];
+    arr.push({...task});
+    this.plannedTasks.next(arr);
   }
 
   private _addTaskToArchive(task: Task): void {
-    const arr = [...this._archive.value];
+    const arr = [...this.archive.value];
     arr.unshift(task);
-    this._archive.next(arr);
+    this.archive.next(arr);
   }
 
   updateTask(task: Task, list: TaskList = TaskList.WAITING): void {
@@ -148,7 +143,7 @@ export class PlanningService {
             break;
           }
           case TaskList.PLANNED: {
-            this._addTaskToDay(task, event);
+            this._addTaskToDay(task);
             break;
           }
           case TaskList.ARCHIVE: {
@@ -168,92 +163,90 @@ export class PlanningService {
   }
 
   private _removeTaskFromWaiting(task: Task): void {
-    const index = this._waiting.value.findIndex( t => t.id === task.id);
+    const index = this.waiting.value.findIndex( t => t.id === task.id);
 
     if (index !== -1) {
-      this._waiting.value.splice(index, 1);
-      this._waiting.next(this._waiting.value);
+      this.waiting.value.splice(index, 1);
+      this.waiting.next(this.waiting.value);
     }
 
-    if (task.project) {
-
-      const projects = this._projects.value;
-      const index2 = projects.findIndex(p => p.id === task.project.id);
-      if (index2 !== -1) {
-        const index3 = projects[index].tasks.findIndex(t => t.id === task.id);
-        if (index3 !== -1) {
-          projects[index].tasks.splice(index3, 1);
-        }
-      }
-    }
+    // if (task.project) {
+    //
+    //   const projects = this.projects.value;
+    //   const index2 = projects.findIndex(p => p.id === task.project.id);
+    //   if (index2 !== -1) {
+    //     const index3 = projects[index].tasks.findIndex(t => t.id === task.id);
+    //     if (index3 !== -1) {
+    //       projects[index].tasks.splice(index3, 1);
+    //     }
+    //   }
+    // }
   }
 
   private _removeTaskFromArchive(task: Task): void {
-    const index = this._archive.value.findIndex( t => t.id === task.id);
+    const index = this.archive.value.findIndex( t => t.id === task.id);
 
     if (index !== -1) {
-      this._archive.value.splice(index, 1)
-      this._archive.next(this._archive.value);
+      const arr = [...this.archive.value];
+      arr.splice(index, 1);
+      this.archive.next(arr);
     }
   }
 
   private _removeTaskFromDay(task: Task): void {
-    const index = this._days.findIndex(day => moment(task.begin).isSame(moment(day.date), 'day'));
+    const index = this.plannedTasks.value.findIndex( t => t.id === task.id);
 
     if (index !== -1) {
-      const index2 = this._days[index].tasks.findIndex(d => d.id === task.id);
-
-      if (index2 !== -1) {
-        this._days[index].tasks.splice(index2, 1);
-      }
+      const arr = [...this.plannedTasks.value];
+      arr.splice(index, 1)
+      this.plannedTasks.next(arr);
     }
   }
 
   private _updateTask(task: Task): void {
 
-    const index = this._waiting.value.findIndex( t => t.id === task.id);
+    const index = this.waiting.value.findIndex( t => t.id === task.id);
 
     if (index !== -1) {
       // TODO more complex update of task
-      this._waiting.value[index] = task;
-      this._waiting.next(this._waiting.value);
+      const arr = [...this.waiting.value];
+      arr[index] = {...task};
+      this.waiting.next(arr);
     }
 
-    if (task.project) {
-
-      const projects = this._projects.value;
-      const index2 = projects.findIndex(p => p.id === task.project.id);
-      if (index2 !== -1) {
-        const index3 = projects[index].tasks.findIndex(t => t.id === task.id);
-        if (index3 !== -1) {
-          projects[index].tasks[index3] = task;
-        }
-      }
-    }
+    // if (task.project) {
+    //
+    //   const projects = this.projects.value;
+    //   const index2 = projects.findIndex(p => p.id === task.project.id);
+    //   if (index2 !== -1) {
+    //     const index3 = projects[index].tasks.findIndex(t => t.id === task.id);
+    //     if (index3 !== -1) {
+    //       projects[index].tasks[index3] = task;
+    //     }
+    //   }
+    // }
 
   }
 
   private _updateDayTask(task: Task): void {
 
-
-    const index = this._days.findIndex(day => moment(task.begin).isSame(moment(day.date), 'day'));
+    const index = this.plannedTasks.value.findIndex( t => t.id === task.id);
 
     if (index !== -1) {
-      const index2 = this._days[index].tasks.findIndex(d => d.id === task.id);
-
-      if (index2 !== -1) {
-        this._days[index].tasks[index2] = task;
-      }
+      const arr = [...this.plannedTasks.value];
+      arr[index] = {...task};
+      this.plannedTasks.next(arr);
     }
   }
 
   private _updateArchiveTask(task: Task): void {
-    const index = this._archive.value.findIndex( t => t.id === task.id);
+    const index = this.archive.value.findIndex( t => t.id === task.id);
 
     if (index !== -1) {
       // TODO more complex update of task
-      this._archive.value[index] = task;
-      this._archive.next(this._archive.value);
+      const arr = [...this.archive.value];
+      arr[index] = {...task};
+      this.archive.next(arr);
     }
 
 
@@ -268,9 +261,9 @@ export class PlanningService {
   }
 
   private _addProject(project: Project): void {
-    const arr = [...this._projects.value];
+    const arr = [...this.projects.value];
     arr.unshift(project);
-    this._projects.next([...arr]);
+    this.projects.next(arr);
   }
 
   updateProject(project: Project): void {
@@ -282,7 +275,7 @@ export class PlanningService {
   }
 
   private _updateProject(project: Project): void {
-    const projects = [...this._projects.value];
+    const projects = [...this.projects.value];
     const index = projects.findIndex(p => p.id === project.id);
     if (index !== -1) {
       project.tasks = projects[index].tasks;
@@ -293,72 +286,80 @@ export class PlanningService {
       });
 
 
-      this._projects.next(projects);
+      this.projects.next(projects);
     }
   }
 
-  getCurrentMonth(): PlanningMonth {
-    const date =  new Date(Date.now());
-    return this.getMonth(date);
+  getCurrentMonthDate(): Date {
+    return moment(new Date(Date.now())).startOf('month').toDate();
   }
 
-  getMonth(date: Date): PlanningMonth {
-    return this.mapMonth(date);
+  getCurrentDate(): Date {
+    return new Date(Date.now());
   }
 
-  getNextMonth(date: Date): Date {
+  getMonth(date: Date): Observable<PlanningMonth> {
+    const month = new PlanningMonth();
+    month.date = moment(date).startOf('month').toDate();
+    const {from, to} = PlanningService.findMonth(date);
+    month.days = PlanningService.generateDays(from, to);
+    this.askForTasks(from, to);
+    return this.$plannedTasks.pipe(
+      map((tasks: Task[] ) => tasks.filter( t => moment(t).isBetween(from, to, 'day', '[]'))),
+      map((tasks: Task[]) => {
+             month.days = this.tasksMapToDays(tasks, month.days);
+             return month;
+           })
+    );
+  }
+
+  private tasksMapToDays(tasks: Task[], days: PlanningDay[]): PlanningDay[] {
+    const result = [...days];
+
+    result.forEach((day: PlanningDay) => {
+      day.tasks = tasks.filter((task: Task) => moment(task.begin).isSame(moment(day.date), 'day') );
+    });
+
+    return result;
+  }
+
+  getNextMonthDate(date: Date): Date {
     return moment(date).add(1, 'months').toDate();
   }
 
-  getPrevMonth(date: Date): Date {
+  getPrevMonthDate(date: Date): Date {
     return moment(date).subtract(1, 'months').toDate();
   }
 
 
-  // TODO make return Promise<PlanningDay>
-  getDay(date: Date): PlanningDay {
-    const day = this._days.find( d => moment(date).isSame(moment(d.date), 'day') );
-
-    return day ? day : this.askForDay(date);
+  getDay(date: Date): Observable<PlanningDay> {
+    return this.$plannedTasks.pipe(
+      map( (tasks: Task[]) => {
+              const day = new PlanningDay();
+              day.date = date;
+              day.tasks = tasks.filter(task => moment(task.begin).isSame(moment(day.date), 'day'));
+              return day;
+          })
+    );
   }
 
-  getCurrentDay(): PlanningDay {
+  getCurrentDay(): Observable<PlanningDay> {
     const date =  new Date(Date.now());
     return this.getDay(date);
   }
 
-  getNextDay(date: Date): Date {
+  getNextDayDate(date: Date): Date {
     return moment(date).add(1, 'days').toDate();
   }
 
-  getPrevDay(date: Date): Date {
+  getPrevDayDate(date: Date): Date {
     return moment(date).subtract(1, 'days').toDate();
   }
 
 
-  private askForDay(date: Date): PlanningDay {
-    // TODO ask server for tasks on specific day
-    const month = this.mapMonth(date);
-    const day = month.days.find( d => moment(date).isSame(moment(d.date), 'day') );
-    console.log(day);
-    return day;
-  }
-
-  private mapMonth(date: Date): PlanningMonth {
-    const month = new PlanningMonth();
-    month.date = moment(date).startOf('month').toDate();
-    const monthDuration = this.findMonth(date);
-    month.days  = this.getDays(monthDuration);
-    return month;
-  }
-
-
-  private findMonth(date: Date): {from: Date, to: Date} {
+  private static findMonth(date: Date): {from: Date, to: Date} {
     let begin = moment(date).startOf('month');
     let end = moment(date).endOf('month');
-
-    // begin = begin.subtract( (begin.day() + 6) % 7, 'days');
-    // end = end.add( ( (7 - end.day())  % 7), 'days');
 
     begin = begin.startOf('isoWeek');
     end = end.endOf('isoWeek');
@@ -376,48 +377,12 @@ export class PlanningService {
     return {from: begin.toDate(), to: end.toDate()};
   }
 
-  private getDays(interval: {from: Date, to: Date}): PlanningDay[] {
-    const from = moment(interval.from);
-    const to = moment(interval.to);
-    let days = this._days.filter((day) => moment(day.date).isBetween(from, to, 'day', '[]'));
-    if (days.length < 42) {
-      if (days.length === 0) {
-        const genDaysBefore = this.generateDays(interval.from, interval.to);
-        this._days.unshift(...genDaysBefore);
-        this.sortDays(this._days);
-        this.askForTasks(from.toDate(), to.toDate());
 
-      } else {
-        // sort days by date
-        this.sortDays(days);
-
-        const firstDate = moment(days[0].date);
-        if (from.isBefore(firstDate, 'day')) {
-          const genDaysBefore = this.generateDays(from.toDate(), moment(firstDate).subtract(1, 'days').toDate());
-          this.addDays(genDaysBefore);
-          this.askForTasks(from.toDate(), moment(firstDate).subtract(1, 'days').endOf('day').toDate());
-        }
-
-        const lastDate = moment(days[days.length - 1].date);
-        if (lastDate.isBefore(to, 'day')) {
-          const genDaysBefore = this.generateDays(moment(lastDate).add(1, 'days').toDate(), to.toDate());
-          this.addDays(genDaysBefore);
-          this.askForTasks(moment(lastDate).add(1, 'days').startOf('day').toDate(),  to.toDate());
-        }
-
-      }
-
-      days = this._days.filter((day) => moment(day.date).isBetween(from, to, 'day', '[]'));
-    }
-
-    return days;
-  }
-
-  private generateDays(from: Date, to: Date): PlanningDay[] {
+  private static generateDays(from: Date, to: Date): PlanningDay[] {
 
     return Array.from(moment.range(from, to).by('days')).map(date => {
       const day = new PlanningDay();
-      day.date = date.toDate();
+      day.date = date.startOf('day').toDate();
       day.tasks = [];
       day.deadlines = [];
       return day;
@@ -427,28 +392,37 @@ export class PlanningService {
 
 
   private askForTasks(from: Date, to: Date): void {
-    const momentFrom = moment(from);
-    const momentTo = moment(to);
-    this.taskService.getTasks(from.getTime(), to.getTime()).subscribe((tasks: Task[]) => {
-      const days = this._days.filter((day) => moment(day.date).isBetween(momentFrom, momentTo, 'day', '[]'));
-      days.forEach((day) => {
-        day.tasks = tasks.filter((t) => moment(day.date).isSame(moment(t.begin, 'day')));
-        // TODO what to do with deadlines
-      });
+    this.taskService.getTasks(from.getTime(), to.getTime())
+      .pipe(tap(tasks => {
+        console.log(`load tasks from:${from} to:${to} loaded:${tasks.length}`);
+        console.log(tasks);
+      }))
+      .subscribe((tasks: Task[]) => {
+      Array.from(moment.range(from, to).by('days')).map(date => date.startOf('day').toDate())
+        .forEach(x => {
+          if (!this.loadedDays.has(x)) {
+            this.loadedDays.add(x);
+          }
+        });
+      this.addTasks(tasks);
     });
+
+
+    // TODO ask here for deadlines and map them
   }
 
-  private sortDays(list: PlanningDay[]): void {
-    list.sort((a, b) => {
-      const aMil: number = a.date.getTime();
-      const bMil: number  = b.date.getTime();
-      return Math.sign(aMil - bMil);
-    } );
-  }
 
-  private addDays(list: PlanningDay[]): void {
-    this._days.push(...list);
-    this.sortDays(this._days);
+  private addTasks(tasks: Task[]): void {
+    const arr: Task[] = [...tasks, ...this.plannedTasks.getValue()];
+    const result = [];
+    const m = new Map();
+    for (const x of arr) {
+      if (!m.has(x.id)) {
+        m.set(x.id, true);
+        result.push(x);
+      }
+    }
+    this.plannedTasks.next(result);
   }
 
 }
