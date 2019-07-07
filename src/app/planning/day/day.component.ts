@@ -17,7 +17,7 @@ export class DayComponent implements OnInit, AfterViewInit {
   private monthDate = new ReplaySubject(1);
   public $monthDate = this.monthDate.asObservable();
 
-  day: PlanningDay;
+  dayDate: Date;
   month: PlanningMonth;
   constructor(private renderer: Renderer2, private elem: ElementRef,
               private router: Router, private route: ActivatedRoute,
@@ -39,9 +39,9 @@ export class DayComponent implements OnInit, AfterViewInit {
               return result;
             }),
         tap((date: Date) => this.monthDate.next(date)),
-        switchMap((date: Date) => this.planningService.getDay(date)),
+        // switchMap((date: Date) => this.planningService.getDay(date)),
     ).subscribe((day) => {
-      this.day = day;
+      this.dayDate = day;
     });
 
     this.$monthDate
@@ -83,12 +83,12 @@ export class DayComponent implements OnInit, AfterViewInit {
   }
 
   prevDay(): void {
-    const nextDate = this.planningService.getPrevDayDate(this.day.date);
+    const nextDate = this.planningService.getPrevDayDate(this.dayDate);
     this.selectedDay(nextDate);
   }
 
   nextDay(): void {
-    const nextDate = this.planningService.getNextDayDate(this.day.date);
+    const nextDate = this.planningService.getNextDayDate(this.dayDate);
     this.selectedDay(nextDate);
   }
 }

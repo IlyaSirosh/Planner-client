@@ -5,7 +5,8 @@ import {
   ViewChildren
 } from '@angular/core';
 import {Task} from '../../domain/task';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of, ReplaySubject} from 'rxjs';
+import {map, switchMap, tap, withLatestFrom} from 'rxjs/internal/operators';
 
 
 
@@ -14,7 +15,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
   templateUrl: './day-time-range.component.html',
   styleUrls: ['./day-time-range.component.css']
 })
-export class DayTimeRangeComponent implements OnInit, AfterViewInit, OnChanges{
+export class DayTimeRangeComponent implements OnInit, AfterViewInit, OnChanges {
 
   @Input() numberOfHours: number;
   @Input() startsFrom: number;
@@ -31,16 +32,21 @@ export class DayTimeRangeComponent implements OnInit, AfterViewInit, OnChanges{
   strokeWidth: number;
   taskHalfWidth: number;
 
-
   private _taskNodes = new BehaviorSubject<TaskNode[]>([]);
-  public readonly $taskNodes = this._taskNodes.asObservable();
-  private _setRefs = new BehaviorSubject<boolean>(false);
-  public readonly $setRefs = this._setRefs.asObservable();
+  public readonly $taskNodes = this._taskNodes.asObservable().pipe(
+    tap(v => {
+      console.log(v);
+      console.log(this.taskRefs);
+      this.render();
+    })
+  );
+
+  private refs = new ReplaySubject(1);
+  public readonly $refs = this.refs.asObservable();
 
   constructor(private elem: ElementRef) { }
 
   ngOnInit() {
-
 
     this.numberOfHours = 18;
     this.startsFrom = 6;
@@ -68,17 +74,19 @@ export class DayTimeRangeComponent implements OnInit, AfterViewInit, OnChanges{
       '#867666',
       '#E1B80D',
     ];
-
     this.initTasks();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-
+    this.initTasks();
   }
 
   ngAfterViewInit() {
-
-    this.setRefsOfTask();
+    this.taskRefs.changes.subscribe( (changes: QueryList<ElementRef>) => {
+      const nodes = this._taskNodes.value;
+      changes.forEach((x, i) => nodes[i].ref = x);
+      this.refs.next(null);
+    });
   }
 
   private alignTimeLine(): void {
@@ -116,32 +124,6 @@ export class DayTimeRangeComponent implements OnInit, AfterViewInit, OnChanges{
       .map((task, i) => this.map(task, i)));
   }
 
-  addTask(task: Task): void {
-    const arr = [...this._taskNodes.value];
-    arr.push(this.map(task));
-    this._taskNodes.next(arr );
-    this.setRefsOfTask();
-    this.render();
-    console.log(arr);
-  }
-
-  updateTask(task: Task): void {
-
-  }
-
-  removeTask(task: Task): void {
-
-    this.setRefsOfTask();
-  }
-
-  public setRefsOfTask(): void {
-    const refArr = this.taskRefs.toArray();
-    this._taskNodes.value.forEach((node, i) => {
-      node.ref = refArr[i];
-    });
-
-    this._setRefs.next(true);
-  }
 
   private heightOfTask(task: Task): number {
     if (!task.end) {
@@ -153,7 +135,8 @@ export class DayTimeRangeComponent implements OnInit, AfterViewInit, OnChanges{
   }
 
   private offsetTaskStart(task: Task): number {
-    const offset = (1 + (task.begin.getHours() - this.startsFrom ) + (task.begin.getMinutes() / 60)) * this.offsetPerHour;
+    const begin = new Date(task.begin);
+    const offset = (1 + (begin.getHours() - this.startsFrom ) + (begin.getMinutes() / 60)) * this.offsetPerHour;
     return offset;
   }
 
@@ -161,7 +144,9 @@ export class DayTimeRangeComponent implements OnInit, AfterViewInit, OnChanges{
     if (!task.end || !task.begin) {
       return '';
     }
-    const durationMinutes = (task.end.getTime() - task.begin.getTime()) / 60000;
+    const begin = new Date(task.begin);
+    const end = new Date(task.end);
+    const durationMinutes = (end.getTime() - begin.getTime()) / 60000;
     const hours = Math.floor(durationMinutes / 60);
     const minutes = durationMinutes % 60;
     let s = hours > 0 ? `${hours}h ` : '';
