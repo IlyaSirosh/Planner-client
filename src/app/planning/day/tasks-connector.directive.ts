@@ -36,7 +36,7 @@ export class TasksConnectorDirective implements AfterContentInit, OnInit , OnDes
     // this.renderer.listen(this.elem.nativeElement, 'onresize', this.render.bind(this));
   }
 
-  @HostListener('window:resize')
+  @HostListener('resize')
   onWindowResize(): void {
     this.render();
   }
