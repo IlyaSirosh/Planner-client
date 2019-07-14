@@ -78,7 +78,9 @@ export class DayTimeRangeComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.initTasks();
+    if (!changes['tasks'].isFirstChange()) {
+      this.initTasks();
+    }
   }
 
   ngAfterViewInit() {
